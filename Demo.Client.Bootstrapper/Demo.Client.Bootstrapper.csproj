@@ -37,6 +37,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
@@ -85,6 +86,10 @@
     <ProjectReference Include="..\Core.Common.UI\Core.Common.UI.csproj">
       <Project>{7de2faf6-43df-48a5-b464-e8955af0a4df}</Project>
       <Name>Core.Common.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.Common\Core.Common.csproj">
+      <Project>{8D236A26-8D80-44C5-AD20-97302AF77EA0}</Project>
+      <Name>Core.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demo.Admin.ViewModels\Demo.Admin.ViewModels.csproj">
       <Project>{1b829930-5585-4737-b932-849c4b10cd6e}</Project>
