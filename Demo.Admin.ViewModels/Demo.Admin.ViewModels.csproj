@@ -63,10 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EditProductDialogViewModel.cs" />
-    <Compile Include="MaintainOrdersViewModel.cs" />
-    <Compile Include="MaintainProductsViewModel.cs" />
-    <Compile Include="MainViewModel.cs" />
+    <Compile Include="ViewModels\EditProductDialogViewModel.cs" />
+    <Compile Include="ViewModels\MaintainOrdersViewModel.cs" />
+    <Compile Include="ViewModels\MaintainProductsViewModel.cs" />
+    <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Messages\ProductChangedMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

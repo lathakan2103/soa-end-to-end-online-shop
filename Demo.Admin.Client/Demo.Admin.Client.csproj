@@ -87,7 +87,6 @@
     <Compile Include="Support\DateTime2VizConverterApproved.cs" />
     <Compile Include="Support\DateTime2VizConverterApprovedReverse.cs" />
     <Compile Include="Support\ModalDialogManager.cs" />
-    <Compile Include="Support\ProductEventArgs.cs" />
     <Compile Include="Support\ProductStatusConverter.cs" />
     <Compile Include="Support\ViewModelNullToVisibilityConverter.cs" />
     <Compile Include="Views\EditProductDialog.xaml.cs">
