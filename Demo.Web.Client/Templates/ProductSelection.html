@@ -1,0 +1,69 @@
+﻿<div ng-switch="viewMode">
+
+    <div ng-switch-when="list">
+        <fieldset>
+            <legend>Available products</legend>
+            <div ng-show="init && products.length > 0">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Art.Nr.</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="p in products">
+                    <tr style="vertical-align: central">
+                        <td><a href="#" ng-click="selectProduct(p)">buy</a></td>
+                        <td>{{ p.ArticleNumber }}</td>
+                        <td>{{ p.Name }}</td>
+                        <td>{{ p.Description }}</td>
+                        <td>{{ p.Price | currency:"€":0 }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div ng-show="init && products.length == 0">
+                <h3>
+                    There are no products yet...
+                </h3>
+            </div>
+        </fieldset>
+    </div>
+
+    <div ng-switch-when="detail">
+
+        <fieldset>
+            <legend>Product</legend>
+            <p class="input-group">
+                <span class="input-group-addon" style="width: 140px; text-align: left;">Article number: </span>
+                <input type="text" style="width: 360px;" class="form-control" ng-model="selectedProduct.ArticleNumber" disabled="disabled" readonly="readonly"/>
+            </p>
+            <p class="input-group">
+                <span class="input-group-addon" style="width: 140px; text-align: left;">Product name: </span>
+                <input type="text" style="width: 360px;" class="form-control" ng-model="selectedProduct.Name" disabled="disabled" readonly="readonly"/>
+            </p>
+            <p class="input-group">
+                <span class="input-group-addon" style="width: 140px; text-align: left;">Description: </span>
+                <input type="text" style="width: 360px;" class="form-control" ng-model="selectedProduct.Description" disabled="disabled" readonly="readonly"/>
+            </p>
+            <p class="input-group">
+                <span class="input-group-addon" style="width: 140px; text-align: left;">Price: </span>
+                <input type="text" style="width: 360px;" class="form-control" ng-model="selectedProduct.Price" disabled="disabled" readonly="readonly"/>
+            </p>
+        </fieldset>
+
+        <hr style="width: 415px; text-align: left;" />
+
+        <div>
+            <a href="#" class="btn btn-info" ng-click="goToProductList()">Back to products list</a>
+            <a href="#" class="btn btn-info" ng-click="confirm()">Buy product</a>
+        </div>
+
+    </div>
+
+</div>

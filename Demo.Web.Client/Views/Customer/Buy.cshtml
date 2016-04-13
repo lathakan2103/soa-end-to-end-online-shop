@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Buy";
+    ViewBag.Name = "Buy";
+}
+
+<div data-ng-app="buy" id="buy" data-ng-controller="BuyController">
+    <div style="margin-top: 60px;"></div>
+    @Html.Partial("~/Views/Shared/_ValidationErrors.cshtml")
+    <div ng-view></div>
+</div>
+
+@section scripts
+{
+    <script src="@Url.Content("~/Binding/Models/BuyModel.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Binding/Controllers/BuyController.js")" type="text/javascript"></script>
+}
+@section footerScript
+{
+    angular.bootstrap(document.getElementById("buy"),['buy']);
+}

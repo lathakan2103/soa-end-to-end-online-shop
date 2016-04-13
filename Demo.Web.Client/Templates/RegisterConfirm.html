@@ -1,0 +1,70 @@
+﻿<div>
+
+    <fieldset>
+        <legend>Personal data</legend>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">First name: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.FirstName" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Last name: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.LastName" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Age: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.Age" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Address: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.Street" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Hausnumber: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.Hausnumber" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Zip code: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.ZipCode" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">City: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.City" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">State: </span>
+            <input type="text" style="width: 360px;" class="form-control" ng-model="accountModelStep1.State" disabled="disabled" readonly="readonly"/>
+        </p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Login data</legend>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Login email: </span>
+            <input type="text" style="width: 360px;" ng-model="accountModelStep2.LoginEmail" class="form-control" disabled="disabled" readonly="readonly"/>
+        </p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Is active customer: </span>
+            <input type="checkbox" class="form-control" ng-model="accountModelStep3.IsActive" style="margin-left: 5px; text-align: left; width: 40px; margin-bottom: 0; margin-top: 0;" disabled="disabled" readonly="readonly"/>
+        </p>
+    </fieldset>
+
+    <fieldset>
+        <legend>Payment data</legend>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Credit card: </span>
+            <input type="text" style="width: 360px;" ng-model="accountModelStep3.CreditCard" class="form-control" disabled="disabled" readonly="readonly" />
+        </p>
+        <p>
+        <p class="input-group">
+            <span class="input-group-addon" style="width: 140px; text-align: left;">Exp. date: </span>
+            <input type="text" style="width: 360px;" ng-model="accountModelStep3.ExpirationDate" class="form-control" disabled="disabled" readonly="readonly" />
+        </p>
+    </fieldset>
+
+    <hr style="width: 415px; text-align: left;"/>
+
+    <div>
+        <a href="#" class="btn btn-info" ng-click="previous()">Previous</a>
+        <a href="#" class="btn btn-info" ng-click="createAccount()">Create Account</a>
+    </div>
+</div>

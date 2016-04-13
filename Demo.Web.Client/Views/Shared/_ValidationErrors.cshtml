@@ -1,0 +1,6 @@
+﻿<div ng-show="controllerHelper.modelIsValid == false" class="alert alert-danger">
+    <h4 class="alert-heading">Errors!</h4>
+    <ul data-ng-repeat="e in controllerHelper.modelErrors">
+        <li>{{ e }}</li>
+    </ul>
+</div>

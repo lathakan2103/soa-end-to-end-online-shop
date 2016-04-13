@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "Shopping History";
+    ViewBag.Name = "Account";
+}
+
+<div style="height: 60px;"></div>
+<div ng-switch="viewMode" data-ng-controller="HistoryController">
+    <div ng-switch-when="list">
+        <fieldset>
+            <legend>Your shopping history</legend>
+            <div ng-show="init && carts.length > 0">
+
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Cart</th>
+                        <th>Ordered at</th>
+                        <th>Approved at</th>
+                        <th>Canceled at</th>
+                        <th>Shipped at</th>
+                        <th>Shipping</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody ng-repeat="c in carts">
+                    <tr style="vertical-align: central">
+                        <td><a href="#" ng-click="showItems(c)">details</a></td>
+                        <td>
+                            <a ng-show="c.Canceled == null && c.Approved == null && c.Shipped == null" href="#" ng-click="cancelCart(c)">cancel</a>
+                        </td>
+                        <td>{{ c.CartId }}</td>
+                        <td>{{ c.Created | date: 'dd.MM.yyyy' }}</td>
+                        <td>{{ c.Approved == null ? 'n/a' : c.Approved | date: 'dd.MM.yyyy' }}</td>
+                        <td>{{ c.Canceled == null ? 'n/a' : c.Canceled | date: 'dd.MM.yyyy' }}</td>
+                        <td>{{ c.Shipped == null ? 'n/a' : c.Shipped | date: 'dd.MM.yyyy' }}</td>
+                        <td>{{ c.ShippingCost | currency: '€ ':0 }}</td>
+                        <td><b>{{ c.Total | currency:'€ ':0 }}</b></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div ng-show="init && carts.length == 0">
+                <h3>
+                    There are no items in your history yet...
+                </h3>
+            </div>
+        </fieldset>
+    </div>
+    <div ng-switch-when="details">
+        <fieldset>
+            <legend>Selected cart</legend>
+            <div ng-show="items.length > 0">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Art. Nr.</th>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody ng-repeat="i in items">
+                        <tr style="vertical-align: central">
+                            <td>{{ i.CartItemId }}</td>
+                            <td>{{ i.ArticleNumber }}</td>
+                            <td>{{ i.Product.Name }}</td>
+                            <td>{{ i.Product.Description }}</td>
+                            <td>{{ i.Quantity }}</td>
+                            <td>{{ i.Product.Price | currency:'€ ':0 }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <div ng-show="items.length == 0">
+                <h3>
+                    There are no items in selected cart...
+                </h3>
+            </div>
+        </fieldset>
+        <hr style="width: 415px; text-align: left;" />
+        <div>
+            <a href="#" class="btn btn-info" ng-click="goToCartsList()">Back to carts list</a>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="@Url.Content("~/Binding/Models/HistoryModel.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Binding/Controllers/HistoryController.js")" type="text/javascript"></script>
+}
