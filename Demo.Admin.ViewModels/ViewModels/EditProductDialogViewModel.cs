@@ -21,6 +21,7 @@ namespace Demo.Admin.ViewModels
         private Product _model;
         private readonly IInventoryService _inventoryService;
         private Product _currentModel;
+        private IMessenger _messenger;
 
         #endregion
 
@@ -82,11 +83,13 @@ namespace Demo.Admin.ViewModels
         #region C-Tor
 
         [ImportingConstructor]
-        public EditProductDialogViewModel(IInventoryService inventoryService)
+        public EditProductDialogViewModel(IInventoryService inventoryService, IMessenger messemger)
         {
             this._inventoryService = inventoryService;
             this.RegisterCommands();
             this.CurrentProduct = null;
+
+            this._messenger = messemger;
         }
 
         #endregion
@@ -155,7 +158,13 @@ namespace Demo.Admin.ViewModels
             p.IsActive = this.CurrentProduct.IsActive;
 
             var result = this._inventoryService.UpdateProduct(p);
-            Messenger.Default.Send(new ProductChangedMessage());
+
+            if (this._messenger == null)
+            {
+                this._messenger = new Messenger();
+            }
+            this._messenger.Send(new ProductChangedMessage());
+
             this.OkCommand.Execute(null);
         }
 

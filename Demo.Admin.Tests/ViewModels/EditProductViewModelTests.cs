@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Demo.Admin.Messages;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Core.Common.Contracts;
 using Moq;
 using Demo.Admin.ViewModels;
 using Demo.Client.Entities;
 using Demo.Client.Contracts;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Demo.Admin.Tests.ViewModels
 {
@@ -16,7 +16,7 @@ namespace Demo.Admin.Tests.ViewModels
         {
             var inventoryService = new Mock<IInventoryService>();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object);
+            var vm = new EditProductDialogViewModel(inventoryService.Object, null);
             vm.CurrentProduct = new Product();
 
             Assert.IsNotNull(vm.CurrentProduct);
@@ -46,9 +46,13 @@ namespace Demo.Admin.Tests.ViewModels
             };
 
             var inventoryService = new Mock<IInventoryService>();
+            var messenger = new Mock<IMessenger>();
+            messenger.Setup(obj => obj.Send(new ProductChangedMessage())).Verifiable();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object);
-            vm.CurrentProduct = productToUpdate;
+            var vm = new EditProductDialogViewModel(inventoryService.Object, messenger.Object)
+            {
+                CurrentProduct = productToUpdate
+            };
 
             inventoryService.Setup(obj => obj.GetProductById(0, true)).Returns(new Product());
             inventoryService.Setup(obj => obj.UpdateProduct(productToUpdate)).Returns(addedProduct);
@@ -77,9 +81,13 @@ namespace Demo.Admin.Tests.ViewModels
             };
 
             var inventoryService = new Mock<IInventoryService>();
+            var messenger = new Mock<IMessenger>();
+            messenger.Setup(obj => obj.Send(new ProductChangedMessage())).Verifiable();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object);
-            vm.CurrentProduct = productToUpdate;
+            var vm = new EditProductDialogViewModel(inventoryService.Object, messenger.Object)
+            {
+                CurrentProduct = productToUpdate
+            };
             vm.CurrentProduct.Name = "UPDATED";
 
             inventoryService.Setup(obj => obj.GetProductById(1, true)).Returns(productToUpdate);
