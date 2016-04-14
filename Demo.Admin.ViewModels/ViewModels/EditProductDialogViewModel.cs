@@ -6,6 +6,7 @@ using Demo.Admin.Messages;
 using System.ComponentModel.Composition;
 using Demo.Client.Entities;
 using Core.Common.Core;
+using Core.Common.Contracts;
 
 namespace Demo.Admin.ViewModels
 {
@@ -19,13 +20,7 @@ namespace Demo.Admin.ViewModels
         private string _title;
         private Product _model;
         private readonly IInventoryService _inventoryService;
-        private string _productName;
-        private string _productDescription;
-        private decimal _productPrice;
         private Product _currentModel;
-        private bool _productIsActive;
-        private int _productId;
-        private string _productArticleNumber;
 
         #endregion
 
@@ -73,80 +68,6 @@ namespace Demo.Admin.ViewModels
                 OnPropertyChanged(() => this.CurrentProduct);
             }
         }
-
-        #endregion
-
-        #region CurrentProduct
-
-        //public int ProductId
-        //{
-        //    get { return this._productId; }
-        //    set
-        //    {
-        //        if (this._productId == value) return;
-        //        this._productId = value;
-        //        OnPropertyChanged(() => this.ProductId);
-        //    }
-        //}
-
-        //public string ProductArticleNumber
-        //{
-        //    get { return this._productArticleNumber; }
-        //    set
-        //    {
-        //        if (this._productArticleNumber == value) return;
-        //        this._productArticleNumber = value;
-        //        OnPropertyChanged(() => this.ProductArticleNumber);
-        //    }
-        //}
-
-        //public string ProductName
-        //{
-        //    get { return this._productName; }
-        //    set
-        //    {
-        //        if (this._productName == value) return;
-        //        this._productName = value;
-        //        this.CurrentProduct.Name = value;
-        //        OnPropertyChanged(() => this.ProductName);
-        //    }
-        //}
-
-        //public string ProductDescription
-        //{
-        //    get { return this._productDescription; }
-        //    set
-        //    {
-        //        if (this._productDescription == value) return;
-        //        this._productDescription = value;
-        //        this.CurrentProduct.Description = value;
-        //        OnPropertyChanged(() => this.ProductDescription);
-        //    }
-        //}
-
-        //public decimal ProductPrice
-        //{
-        //    get { return this._productPrice; }
-        //    set
-        //    {
-        //        if (this._productPrice == value) return;
-        //        this._productPrice = value;
-        //        this.CurrentProduct.Price = value;
-        //        OnPropertyChanged(() => this.ProductPrice);
-        //    }
-        //}
-
-        //public bool ProductIsActive
-        //{
-        //    get { return this._productIsActive; }
-        //    set
-        //    {
-        //        if (this._productIsActive == value) return;
-        //        this._productIsActive = value;
-        //        this.CurrentProduct.IsActive = value;
-        //        OnPropertyChanged(() => this.ProductIsActive);
-        //    }
-        //}
 
         #endregion
 

@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=4.2.1510.2205, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <HintPath>..\packages\Moq.4.2.1510.2205\lib\net40\Moq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <Choose>
@@ -45,15 +49,46 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\MaintainProductsViewModelTests.cs" />
+    <Compile Include="ViewModels\MaintainOrdersViewModelTests.cs" />
+    <Compile Include="ViewModels\EditProductViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="ViewModels\" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core.Common.Contracts\Core.Common.Contracts.csproj">
+      <Project>{f1d533f9-31fc-4c34-86a7-416161fb86c4}</Project>
+      <Name>Core.Common.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.Common.UI\Core.Common.UI.csproj">
+      <Project>{7de2faf6-43df-48a5-b464-e8955af0a4df}</Project>
+      <Name>Core.Common.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Core.Common\Core.Common.csproj">
+      <Project>{8d236a26-8d80-44c5-ad20-97302af77ea0}</Project>
+      <Name>Core.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.Admin.ViewModels\Demo.Admin.ViewModels.csproj">
+      <Project>{1b829930-5585-4737-b932-849c4b10cd6e}</Project>
+      <Name>Demo.Admin.ViewModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.Client.Contracts\Demo.Client.Contracts.csproj">
+      <Project>{8fc4e9da-8d51-4487-a2c7-15cfaa4b43f9}</Project>
+      <Name>Demo.Client.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.Client.Entities\Demo.Client.Entities.csproj">
+      <Project>{dec45000-ed7f-4077-b5cb-fd5c444f0df3}</Project>
+      <Name>Demo.Client.Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
