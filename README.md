@@ -19,8 +19,8 @@ This is an complete SOA app with some highlights:
       - added some highlights like rules for client side validation (knockout-like), wrapping of the http services
       - separation of the client, controller, models and contracts in separate assemblies
   - desktop app
-  -   - admin application that handles products, cart status (approved, shipped)
-  -   -separation of view models in separate assemblies
+     - admin application that handles products, cart status (approved, shipped)
+     -separation of view models in separate assemblies
   - unit tests!
   
 
@@ -34,7 +34,7 @@ This is an complete SOA app with some highlights:
   That means: if the first step in chain failed (for example shipping cost module throws an error) the next step (for example: sending email notification to the customer) will not be hit at all by the order-pipeline and the complete transaction wiil roll back
 
   
-  -------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------
   
   
 Special thanks to M. Castros, to the people of knockout, G. Block, S. Smith, B. Balmer - your ideas and the way of thinking are awesome and very helpfull...
