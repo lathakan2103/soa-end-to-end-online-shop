@@ -20,7 +20,7 @@ This is an complete SOA app with some highlights:
       - separation of the client, controller, models and contracts in separate assemblies
   - desktop app
      - admin application that handles products, cart status (approved, shipped)
-     -separation of view models in separate assemblies
+     - separation of view models in separate assemblies
   - unit tests!
   
 
