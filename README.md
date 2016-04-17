@@ -18,7 +18,7 @@ This is an complete SOA app with some highlights:
   - web app as customer access to the online shop (MVC with Angular SPA-Silos)
       - added some highlights like rules for client side validation (knockout-like), wrapping of the http services
       - separation of the client, controller, models and contracts in separate assemblies
-  - desktop app
+  - Admin (WPF with MVVM) app
      - admin application that handles products, cart status (approved, shipped)
      - separation of view models in separate assemblies
   - unit tests!
