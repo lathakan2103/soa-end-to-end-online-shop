@@ -2,6 +2,7 @@
 using Demo.Business.Common;
 using Demo.Business.Contracts;
 using Demo.Business.Entities;
+using Demo.Common;
 using Demo.Data.Contracts;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -18,7 +19,7 @@ namespace Demo.Business.Managers.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var principal = new GenericPrincipal(new GenericIdentity("Pingo"), new[] { "Administrators", "DemoAdmin" });
+            var principal = new GenericPrincipal(new GenericIdentity(Security.DemoUser), new[] { Security.DemoAdminRole });
             Thread.CurrentPrincipal = principal;
         }
 

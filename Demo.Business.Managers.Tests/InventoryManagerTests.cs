@@ -8,6 +8,7 @@ using Moq;
 using System.ServiceModel;
 using System.Threading;
 using Demo.Business.Common;
+using Demo.Common;
 
 namespace Demo.Business.Managers.Tests
 {
@@ -17,7 +18,7 @@ namespace Demo.Business.Managers.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var principal = new GenericPrincipal(new GenericIdentity("Pingo"), new[] { "Administrators", "DemoAdmin" });
+            var principal = new GenericPrincipal(new GenericIdentity(Security.DemoUser), new[] { Security.DemoAdminRole });
             Thread.CurrentPrincipal = principal;
         }
 

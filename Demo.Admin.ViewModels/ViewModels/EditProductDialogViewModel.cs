@@ -21,7 +21,7 @@ namespace Demo.Admin.ViewModels
         private Product _model;
         private readonly IInventoryService _inventoryService;
         private Product _currentModel;
-        private Messenger _messenger;
+        private IMessenger _messenger;
 
         #endregion
 
@@ -102,7 +102,7 @@ namespace Demo.Admin.ViewModels
             this.RegisterCommands();
             this.CurrentProduct = null;
 
-            this._messenger = messenger as Messenger;
+            this._messenger = messenger;
         }
 
         #endregion

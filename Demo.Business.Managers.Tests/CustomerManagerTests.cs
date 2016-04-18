@@ -5,6 +5,7 @@ using Moq;
 using Core.Common.Contracts;
 using Demo.Data.Contracts;
 using Demo.Business.Entities;
+using Demo.Common;
 
 namespace Demo.Business.Managers.Tests
 {
@@ -14,7 +15,7 @@ namespace Demo.Business.Managers.Tests
         [TestInitialize]
         public void Initialize()
         {
-            var principal = new GenericPrincipal(new GenericIdentity("Pingo"), new[] { "Administrators", "DemoAdmin" });
+            var principal = new GenericPrincipal(new GenericIdentity(Security.DemoUser), new[] { Security.DemoAdminRole });
             Thread.CurrentPrincipal = principal;
         }
 
