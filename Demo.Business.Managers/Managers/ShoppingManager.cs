@@ -11,6 +11,8 @@ using Demo.Business.Contracts;
 using Demo.Business.Entities;
 using Demo.Common;
 using Demo.Data.Contracts;
+using System.Threading;
+using System.Security.Principal;
 
 namespace Demo.Business.Managers
 {
@@ -100,8 +102,8 @@ namespace Demo.Business.Managers
         /// </summary>
         /// <param name="loginEmail"></param>
         /// <returns></returns>
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public CustomerShoppingHistoryInfo GetShoppingHistory(string loginEmail)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -124,8 +126,8 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Cart GetCartByCartId(int cartId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -149,8 +151,8 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Cart[] GetCartsByDateRange(DateTime start, DateTime end, int? customerId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -175,8 +177,8 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Cart[] GetCartsByCustomer(int customerId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -196,7 +198,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Cart[] GetCanceledCarts(DateTime start, DateTime end, int? customerId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -218,7 +220,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Cart[] GetApprovedCarts(DateTime start, DateTime end, int? customerId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -240,7 +242,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Cart[] GetShippedCarts(DateTime start, DateTime end, int? customerId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -262,7 +264,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Cart[] GetNewCarts()
         {
             return ExecuteFaultHandledOperation(() =>
@@ -275,7 +277,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Cart[] GetCartsWithTotalAmountGreaterThen(decimal totalAmount)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -289,8 +291,8 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public void SetCartAsCanceled(int cartId)
         {
             ExecuteFaultHandledOperation(() =>
@@ -316,7 +318,7 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public void SetCartAsApproved(int cartId)
         {
             ExecuteFaultHandledOperation(() =>
@@ -336,7 +338,7 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public void SetCartAsShipped(int cartId)
         {
             ExecuteFaultHandledOperation(() =>
@@ -356,8 +358,8 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Cart AddCart(Cart cart)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -387,8 +389,8 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public void AddCartItemToCart(int cartId, CartItem item)
         {
             ExecuteFaultHandledOperation(() =>
@@ -415,8 +417,8 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public void AddCartItemsToCart(int cartId, CartItem[] items)
         {
             ExecuteFaultHandledOperation(() =>
@@ -445,8 +447,8 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public IEnumerable<CartItemInfo> GetCartItemsByCartId(int cartId)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -478,7 +480,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public IEnumerable<Cart> GetCarts()
         {
             return ExecuteFaultHandledOperation(() =>

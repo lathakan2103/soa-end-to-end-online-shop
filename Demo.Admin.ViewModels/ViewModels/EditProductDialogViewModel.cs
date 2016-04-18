@@ -21,7 +21,7 @@ namespace Demo.Admin.ViewModels
         private Product _model;
         private readonly IInventoryService _inventoryService;
         private Product _currentModel;
-        private IMessenger _messenger;
+        private Messenger _messenger;
 
         #endregion
 
@@ -83,13 +83,26 @@ namespace Demo.Admin.ViewModels
         #region C-Tor
 
         [ImportingConstructor]
-        public EditProductDialogViewModel(IInventoryService inventoryService, IMessenger messemger)
+        public EditProductDialogViewModel(IInventoryService inventoryService)
+        {
+            this._inventoryService = inventoryService;
+            this.RegisterCommands();
+            this.CurrentProduct = null;
+        }
+
+        /// <summary>
+        /// only for testing purposes
+        /// need to mock IMessenger
+        /// </summary>
+        /// <param name="inventoryService"></param>
+        /// <param name="messenger"></param>
+        public EditProductDialogViewModel(IInventoryService inventoryService, IMessenger messenger)
         {
             this._inventoryService = inventoryService;
             this.RegisterCommands();
             this.CurrentProduct = null;
 
-            this._messenger = messemger;
+            this._messenger = messenger as Messenger;
         }
 
         #endregion
@@ -161,9 +174,8 @@ namespace Demo.Admin.ViewModels
 
             if (this._messenger == null)
             {
-                this._messenger = new Messenger();
-            }
-            this._messenger.Send(new ProductChangedMessage());
+                Messenger.Default.Send(new ProductChangedMessage());
+            }            
 
             this.OkCommand.Execute(null);
         }

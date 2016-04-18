@@ -67,8 +67,8 @@ namespace Demo.Business.Managers
 
         #region ICustomerService implementation
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Customer GetCustomerByLogin(string loginEmail)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -89,7 +89,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Customer[] GetCustomers()
         {
             return ExecuteFaultHandledOperation(() =>
@@ -102,7 +102,7 @@ namespace Demo.Business.Managers
             });
         }
 
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Customer[] GetActiveCustomers()
         {
             return ExecuteFaultHandledOperation(() =>
@@ -116,8 +116,8 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Customer UpdateCustomer(Customer customer)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -133,7 +133,7 @@ namespace Demo.Business.Managers
         }
 
         [OperationBehavior(TransactionScopeRequired = true)]
-        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public void DeleteCustomer(int customerId)
         {
             ExecuteFaultHandledOperation(() =>
