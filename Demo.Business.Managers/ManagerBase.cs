@@ -83,10 +83,12 @@ namespace Demo.Business.Managers
         protected void ValidateAuthorization(ICustomerOwnedEntity entity)
         {
             // omit check if user is in admin role
-            if (Thread.CurrentPrincipal.IsInRole(Security.DemoAdminRole)) return;
+            if (Thread.CurrentPrincipal.IsInRole(Security.DemoAdminRole))
+                return;
 
             // omit check if the user is windows desktop app user
-            if (this.AuthorizationCustomer == null) return;
+            if (this.AuthorizationCustomer == null)
+                return;
 
             // check if the incoming entity and owner entity are the same
             if (string.IsNullOrEmpty(this.LoginEmail) || entity.OwnerCustomerId == this.AuthorizationCustomer.CustomerId)
