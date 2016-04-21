@@ -8,7 +8,6 @@ using Demo.Business.Bootstrapper;
 using Demo.Business.Managers;
 using Timer = System.Timers.Timer;
 using Demo.Business.Managers.Monitoring;
-using System.ServiceModel;
 
 namespace Demo.ServiceHost.Console
 {
