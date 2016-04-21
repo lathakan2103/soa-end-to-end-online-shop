@@ -33,7 +33,7 @@ namespace Demo.Business.Managers.Monitoring
             if (ServiceOperationCalled == null) return;
 
             // bubbling up to OperationReportOperationBehaviorAttribute
-            ServiceOperationCalled(this, new OperationInfoEventArgs(this._serviceName, operationName, "UP"));
+            ServiceOperationCalled(this, new OperationInfoEventArgs(this._serviceName, operationName, "UP", outputs));
         }
 
         public object BeforeCall(string operationName, object[] inputs)
@@ -41,7 +41,7 @@ namespace Demo.Business.Managers.Monitoring
             if (ServiceOperationCalled == null) return null;
 
             // bubbling up to OperationReportOperationBehaviorAttribute
-            ServiceOperationCalled(this, new OperationInfoEventArgs(this._serviceName, operationName, "DOWN"));
+            ServiceOperationCalled(this, new OperationInfoEventArgs(this._serviceName, operationName, "DOWN", inputs));
 
             return null;
         }

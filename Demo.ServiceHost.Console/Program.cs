@@ -76,7 +76,7 @@ namespace Demo.ServiceHost.Console
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        static void OnTimerElapsed(object sender, ElapsedEventArgs e)
+        private static void OnTimerElapsed(object sender, ElapsedEventArgs e)
         {
             System.Console.WriteLine($"Looking for new orders => {DateTime.Now.ToLongTimeString()}");
 
@@ -106,7 +106,7 @@ namespace Demo.ServiceHost.Console
         /// </summary>
         /// <param name="host"></param>
         /// <param name="service"></param>
-        static void StartService(System.ServiceModel.ServiceHost host, string service)
+        private static void StartService(System.ServiceModel.ServiceHost host, string service)
         {
             CheckForBehaviors(host);
 
@@ -124,6 +124,11 @@ namespace Demo.ServiceHost.Console
             System.Console.WriteLine();
         }
 
+        /// <summary>
+        /// checks if additional behaviors has been installed
+        /// and initializes them
+        /// </summary>
+        /// <param name="host"></param>
         private static void CheckForBehaviors(System.ServiceModel.ServiceHost host)
         {
             var behavior = host.Description.Behaviors.Find<OperationReportServiceBehaviorAttribute>();
@@ -146,7 +151,7 @@ namespace Demo.ServiceHost.Console
                     System.Console.ForegroundColor = ConsoleColor.Yellow;
                 }
 
-                System.Console.WriteLine(string.Format("{0} - {3} => '{1}.{2}'",
+                System.Console.WriteLine(string.Format("{0} - {3} => '{1}.{2}' # {4}",
                     string.Format("am {0}.{1}.{2} um {3}.{4}.{5}",
                             DateTime.Now.Day,
                             DateTime.Now.Month,
@@ -156,7 +161,8 @@ namespace Demo.ServiceHost.Console
                             DateTime.Now.Second),
                     args.ServiceName,
                     args.OperationName,
-                    direction.Equals("UP") ? "AFTER " : "BEFORE"));
+                    direction.Equals("UP") ? "AFTER " : "BEFORE",
+                    GetParams(args.Parameter)));
 
                 if (direction.Equals("UP"))
                 {
@@ -165,12 +171,24 @@ namespace Demo.ServiceHost.Console
             };
         }
 
+        private static object GetParams(object[] parameter)
+        {
+            var output = string.Empty;
+
+            foreach (var p in parameter)
+            {
+                output += p.ToString() + " ";
+            }
+
+            return string.IsNullOrWhiteSpace(output) ? "n.A." : output;
+        }
+
         /// <summary>
         /// do some housekeeping
         /// </summary>
         /// <param name="host"></param>
         /// <param name="serviceDescription"></param>
-        static void StopService(System.ServiceModel.ServiceHost host, string serviceDescription)
+        private static void StopService(System.ServiceModel.ServiceHost host, string serviceDescription)
         {
             // do not abort!!!
             host.Close();
