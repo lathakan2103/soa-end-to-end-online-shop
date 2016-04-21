@@ -97,5 +97,10 @@ namespace Demo.Business.Tests
 
             Assert.AreEqual(customer, result);
         }
+        [TestMethod]
+        public void test_closing_cart()
+        {
+
+        }
     }
 }

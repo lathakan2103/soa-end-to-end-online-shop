@@ -459,5 +459,11 @@ namespace Demo.Business.Managers.Tests
 
             repositoryFactory.VerifyAll();
         }
+
+        [TestMethod]
+        public void test_closing_cart()
+        {
+
+        }
     }
 }

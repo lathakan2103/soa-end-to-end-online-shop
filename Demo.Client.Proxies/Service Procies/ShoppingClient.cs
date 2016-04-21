@@ -93,6 +93,11 @@ namespace Demo.Client.Proxies.Service_Procies
             return Channel.GetCartItemsByCartId(cartId);
         }
 
+        public void CloseCart(int cartId)
+        {
+            Channel.CloseCart(cartId);
+        }
+
         public Task<CustomerShoppingHistoryInfo> GetShoppingHistoryAsync(string loginEmail)
         {
             return Channel.GetShoppingHistoryAsync(loginEmail);
@@ -181,6 +186,11 @@ namespace Demo.Client.Proxies.Service_Procies
         public Task<IEnumerable<Cart>> GetCartsAsync()
         {
             return Channel.GetCartsAsync();
+        }
+
+        public Task CloseCartAsync(int cartId)
+        {
+            return Channel.CloseCartAsync(cartId);
         }
     }
 }

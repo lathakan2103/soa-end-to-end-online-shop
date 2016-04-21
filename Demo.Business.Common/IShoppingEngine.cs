@@ -11,5 +11,7 @@ namespace Demo.Business.Common
         CustomerShoppingHistoryInfo GetShoppingHistoryInfo(int customerId, ICartRepository cartRepository);
 
         Customer CheckCustomerOwnership(ICustomerRepository customerRepository, int customerId);
+
+        void ProcessOrder(Cart cart);
     }
 }

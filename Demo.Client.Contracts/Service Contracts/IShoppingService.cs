@@ -82,6 +82,11 @@ namespace Demo.Client.Contracts
         [FaultContract(typeof(AuthorizationValidationException))]
         IEnumerable<CartItemInfo> GetCartItemsByCartId(int cartId);
 
+        [OperationContract]
+        [FaultContract(typeof(NotFoundException))]
+        [FaultContract(typeof(AuthorizationValidationException))]
+        void CloseCart(int cartId);
+
         #region Async
 
         [OperationContract]
@@ -134,6 +139,9 @@ namespace Demo.Client.Contracts
 
         [OperationContract]
         Task<IEnumerable<CartItemInfo>> GetCartItemsByCartIdAsync(int cartId);
+
+        [OperationContract]
+        Task CloseCartAsync(int cartId);
 
         #endregion
     }

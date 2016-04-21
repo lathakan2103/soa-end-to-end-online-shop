@@ -498,6 +498,35 @@ namespace Demo.Business.Managers
             });
         }
 
+        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        public void CloseCart(int cartId)
+        {
+            ExecuteFaultHandledOperation(() =>
+            {
+                var customerRepository = this._repositoryFactory.GetDataRepository<ICustomerRepository>();
+                var cartRepository = this._repositoryFactory.GetDataRepository<ICartRepository>();
+                var shoppingEngine = this._businessFactory.GetBusinessEngine<IShoppingEngine>();
+
+                var cart = cartRepository.Get(cartId);
+                if (cart == null)
+                {
+                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                }
+
+                var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
+
+                // make user equality with the login email
+                ValidateAuthorization(customer);
+
+                // process cart and send it to the db
+                // 1) stock check
+                // 2) check promotions
+                // 3) shipping cost
+                // 4) send notofication
+                shoppingEngine.ProcessOrder(cart);
+            });
+        }
+
         #endregion
     }
 }

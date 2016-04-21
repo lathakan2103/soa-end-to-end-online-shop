@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.Linq;
 using Core.Common.Exceptions;
 using Demo.Business.Common;
 using Demo.Business.Contracts;
@@ -73,6 +72,11 @@ namespace Demo.Business.Business_Engines
                 throw new NotFoundException($"Customer with id: {customerId} was not found");
             }
             return customer;
+        }
+
+        public void ProcessOrder(Cart cart)
+        {
+            
         }
     }
 }

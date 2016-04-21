@@ -79,5 +79,10 @@ namespace Demo.Business.Contracts
         [FaultContract(typeof(NotFoundException))]
         [FaultContract(typeof(AuthorizationValidationException))]
         IEnumerable<CartItemInfo> GetCartItemsByCartId(int cartId);
+
+        [OperationContract]
+        [FaultContract(typeof(NotFoundException))]
+        [FaultContract(typeof(AuthorizationValidationException))]
+        void CloseCart(int cartId);
     }
 }
