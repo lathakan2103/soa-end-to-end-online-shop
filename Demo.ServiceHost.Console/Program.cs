@@ -7,6 +7,7 @@ using Core.Common.Core;
 using Demo.Business.Bootstrapper;
 using Demo.Business.Managers;
 using Timer = System.Timers.Timer;
+using Demo.Business.Managers.Monitoring;
 
 namespace Demo.ServiceHost.Console
 {
@@ -102,6 +103,27 @@ namespace Demo.ServiceHost.Console
         /// <param name="service"></param>
         static void StartService(System.ServiceModel.ServiceHost host, string service)
         {
+            var behavior = host.Description.Behaviors.Find<OperationReportServiceBehaviorAttribute>();
+            if (behavior == null)
+            {
+                behavior = new OperationReportServiceBehaviorAttribute(true);
+                host.Description.Behaviors.Add(behavior);
+            }
+
+            behavior.ServiceOperationCalled += (sender, args) =>
+            {
+                System.Console.WriteLine(string.Format("{0} - {3} => '{1}.{2}'", 
+                    DateTime.Now.ToLongTimeString(), 
+                    args.ServiceName, 
+                    args.OperationName,
+                    args.Direction.ToUpper().Equals("UP") ? "AFTER " : "BEFORE"));
+
+                if (args.Direction.ToUpper().Equals("UP"))
+                {
+                    System.Console.WriteLine("");
+                }
+            };
+
             host.Open();
             System.Console.WriteLine("Service => {0} started...", service);
 

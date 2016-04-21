@@ -11,7 +11,7 @@ using Demo.Business.Contracts;
 using Demo.Business.Entities;
 using Demo.Data.Contracts;
 using Demo.Common;
-using System.Threading;
+using Demo.Business.Managers.Monitoring;
 
 namespace Demo.Business.Managers
 {
@@ -26,6 +26,7 @@ namespace Demo.Business.Managers
         InstanceContextMode = InstanceContextMode.PerCall, 
         ConcurrencyMode = ConcurrencyMode.Multiple, 
         ReleaseServiceInstanceOnTransactionComplete = false)]
+    //[OperationReportServiceBehavior(true)]
     public class InventoryManager : ManagerBase, IInventoryService
     {
         #region Fields
@@ -81,6 +82,7 @@ namespace Demo.Business.Managers
 
         #region IInventoryManager implementation
 
+        // [OperationReportOperationBehavior(true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Product[] GetProducts()
         {
@@ -93,6 +95,7 @@ namespace Demo.Business.Managers
             });
         }
 
+        // [OperationReportOperationBehavior(true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product[] GetActiveProducts()
@@ -106,6 +109,7 @@ namespace Demo.Business.Managers
             });
         }
 
+        // [OperationReportOperationBehavior(true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product GetProductById(int id, bool acceptNullable = false)
@@ -135,6 +139,7 @@ namespace Demo.Business.Managers
         /// </summary>
         /// <param name="product"></param>
         /// <returns></returns>
+        // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
@@ -163,6 +168,7 @@ namespace Demo.Business.Managers
         /// all commands should be transaction ready
         /// </summary>
         /// <param name="productId"></param>
+        // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
@@ -188,6 +194,7 @@ namespace Demo.Business.Managers
         /// all commands should be transaction ready
         /// </summary>
         /// <param name="productId"></param>
+        // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
@@ -209,6 +216,7 @@ namespace Demo.Business.Managers
             });
         }
 
+        // [OperationReportOperationBehavior(true)]
         [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product[] GetMostWanted(DateTime start, DateTime end)
@@ -239,6 +247,6 @@ namespace Demo.Business.Managers
             });
         }
 
-        #endregion
+        #endregion        
     }
 }
