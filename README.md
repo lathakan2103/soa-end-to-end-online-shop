@@ -29,10 +29,10 @@ This is a complete SOA app with main focus on:
 
 
 
-  FURTHER IDEAS:
+  WHAT'S NEXT:
   
-  maybe I'll demonstrate extending the app (better said: of the ordering process) by adding a transaction and within setting infrastructure for switching modules and providers (for example: approving order module or shipping cost module) at anytime with no affect on recompiling the main app, only by discovering the modules during the compile time.
-  That means: if the first step in chain failed (for example shipping cost module throws an error) the next step (for example: sending email notification to the customer) will not be hit at all by the order-pipeline and the complete transaction wiil roll back
+  Extending the app (better said: of the ordering process) by adding a transaction and within infrastructure for switching modules and providers (for example: approving order module or shipping cost module) at anytime with no affect on recompiling the main app, only by discovering the modules during the compile time.
+  That means: if the first step in chain (chain-of-responsibility pattern) failed (for example shipping cost module throws an error) the next step (for example: sending email notification to the customer) will not be hit at all by the order-pipeline and the complete transaction wiil roll back
 
   
 ---------------------------------------------------------------------------------------------------------------------------------------
