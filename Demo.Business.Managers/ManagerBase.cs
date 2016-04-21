@@ -116,6 +116,9 @@ namespace Demo.Business.Managers
             }
             catch (Exception ex)
             {
+                // log to db
+                // ...
+
                 throw new FaultException(ex.Message);
             }
         }
@@ -136,6 +139,9 @@ namespace Demo.Business.Managers
             }
             catch (Exception ex)
             {
+                // log to db
+                // ...
+
                 throw new FaultException(ex.Message);
             }
         }

@@ -139,7 +139,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
@@ -304,7 +305,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
@@ -328,7 +330,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 cart.Approved = DateTime.Today;
@@ -348,7 +351,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 cart.Shipped = DateTime.Today;
@@ -403,7 +407,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
@@ -431,7 +436,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
@@ -461,7 +467,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
@@ -491,7 +498,8 @@ namespace Demo.Business.Managers
                 IEnumerable<Cart> carts = cartRepository.Get();
                 if (carts == null)
                 {
-                    throw new NotFoundException($"No carts found");
+                    var exception = new NotFoundException("No carts found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 return carts;
@@ -510,7 +518,8 @@ namespace Demo.Business.Managers
                 var cart = cartRepository.Get(cartId);
                 if (cart == null)
                 {
-                    throw new NotFoundException($"Cart with id: {cartId} was not found");
+                    var exception = new NotFoundException($"Cart with id: {cartId} was not found");
+                    throw new FaultException<NotFoundException>(exception, exception.Message);
                 }
 
                 var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, cart.CustomerId);
