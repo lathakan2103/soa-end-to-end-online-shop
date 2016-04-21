@@ -49,6 +49,8 @@ namespace Demo.Business.Managers.Monitoring
                     operationBehavior.ServiceOperationCalled += (sender, args) =>
                     {
                         if (ServiceOperationCalled == null) return;
+
+                        // bubbling up to the host
                         ServiceOperationCalled(this, args);
                     };
 

@@ -110,6 +110,7 @@ namespace Demo.ServiceHost.Console
                 host.Description.Behaviors.Add(behavior);
             }
 
+            // register monitoring events (before- / after- operation call)
             behavior.ServiceOperationCalled += (sender, args) =>
             {
                 System.Console.WriteLine(string.Format("{0} - {3} => '{1}.{2}'", 
