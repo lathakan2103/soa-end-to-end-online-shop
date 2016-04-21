@@ -74,6 +74,14 @@ namespace Demo.Business.Business_Engines
             return customer;
         }
 
+        /// <summary>
+        /// 1) check availability
+        /// 2) check promotions
+        /// 3) shipping cost
+        /// 4) change stock
+        /// 5) send notification
+        /// </summary>
+        /// <param name="cart"></param>
         public void ProcessOrder(Cart cart)
         {
             

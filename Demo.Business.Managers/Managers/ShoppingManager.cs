@@ -519,10 +519,6 @@ namespace Demo.Business.Managers
                 ValidateAuthorization(customer);
 
                 // process cart and send it to the db
-                // 1) stock check
-                // 2) check promotions
-                // 3) shipping cost
-                // 4) send notofication
                 shoppingEngine.ProcessOrder(cart);
             });
         }
