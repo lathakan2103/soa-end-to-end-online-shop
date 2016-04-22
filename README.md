@@ -16,6 +16,8 @@ This is a complete SOA app with main focus on:
       - using of service proxies (and taking care of proper disposing)
       - hosting the services (console)
       - monitoring service operations (after and before execution) made "generic"
+      - added service discoerability (only for IInventoryService)
+      - added announcement service for client noification when host goes down and up (by enabling / disabling ui functionalities)
   - web app as customer access to the online shop (MVC with Angular SPA-Silos)
       - added some highlights like rules for client side validation (knockout-like), wrapping of the http services
       - separation of the client, controller, models and contracts in separate assemblies
