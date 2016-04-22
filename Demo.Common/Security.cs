@@ -6,7 +6,7 @@
         /// this user needs to be created on your machine
         /// </summary>
         //public const string DemoUser = "DemoUser";
-        public const string DemoUser = "ATZMDOMAIN\\07759";
+        public const string DemoUser = "DESKTOP-HOE191E\\aleksandar";
 
         /// <summary>
         /// this role needs to be created on your machine

@@ -10,7 +10,6 @@ using Demo.Client.Entities;
 using Core.Common;
 using System.ServiceModel;
 using System.ServiceModel.Discovery;
-using System.Windows.Input;
 using System.Linq;
 
 namespace Demo.Admin.ViewModels
@@ -255,7 +254,7 @@ namespace Demo.Admin.ViewModels
 
             if (this._discoveredAddress.ToString().ToLower().StartsWith("net.tcp"))
             {
-                var binding = new NetHttpBinding();
+                var binding = new NetTcpBinding();
 
                 var factory = new ChannelFactory<IInventoryService>(binding, this._discoveredAddress);
                 var proxy = factory.CreateChannel();

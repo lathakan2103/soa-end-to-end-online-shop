@@ -83,7 +83,7 @@ namespace Demo.Business.Managers
         #region IInventoryManager implementation
 
         // [OperationReportOperationBehavior(true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Product[] GetProducts()
         {
             return ExecuteFaultHandledOperation(() =>
@@ -96,8 +96,8 @@ namespace Demo.Business.Managers
         }
 
         // [OperationReportOperationBehavior(true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product[] GetActiveProducts()
         {
             return ExecuteFaultHandledOperation(() =>
@@ -110,8 +110,8 @@ namespace Demo.Business.Managers
         }
 
         // [OperationReportOperationBehavior(true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        ////[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        ////[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product GetProductById(int id, bool acceptNullable = false)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -142,7 +142,7 @@ namespace Demo.Business.Managers
         // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public Product UpdateProduct(Product product)
         {
             return ExecuteFaultHandledOperation(() =>
@@ -171,7 +171,7 @@ namespace Demo.Business.Managers
         // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public void DeleteProduct(int productId)
         {
             ExecuteFaultHandledOperation(() =>
@@ -197,7 +197,7 @@ namespace Demo.Business.Managers
         // [OperationReportOperationBehavior(true)]
         [TransactionFlow(TransactionFlowOption.Allowed)]
         [OperationBehavior(TransactionScopeRequired = true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
         public void ActivateProduct(int productId)
         {
             ExecuteFaultHandledOperation(() =>
@@ -217,8 +217,8 @@ namespace Demo.Business.Managers
         }
 
         // [OperationReportOperationBehavior(true)]
-        [PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
-        [PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        //[PrincipalPermission(SecurityAction.Demand, Role = Security.DemoAdminRole)]
+        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
         public Product[] GetMostWanted(DateTime start, DateTime end)
         {
             return ExecuteFaultHandledOperation(() =>
