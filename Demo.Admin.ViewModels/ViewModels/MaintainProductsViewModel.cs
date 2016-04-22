@@ -107,7 +107,8 @@ namespace Demo.Admin.ViewModels
         {
             this._products = new ObservableCollection<Product>();
 
-            this.LoadProductsWithDynamicallyEndpoint();
+            this.LoadProductsWithDynamicallyEndpointAndAnnouncement();
+            //this.LoadProductsWithDynamicallyEndpoint();
             //this.LoadProductsWithDiscoveringEndpointWithSettings();
             //this.LoadProductsWithHardcodedEndpoint();
         }
@@ -122,7 +123,7 @@ namespace Demo.Admin.ViewModels
             this._serviceFactory = serviceFactory;
 
             this.RegisterCommands();
-            this.RegisterMessengers();         
+            this.RegisterMessengers();
         }
 
         #endregion
@@ -169,15 +170,14 @@ namespace Demo.Admin.ViewModels
 
         #endregion
 
-        #region Discovering dynamically for service
+        #region Discovering dynamically for service with announcement
 
-        /// <summary>
-        /// use it if you know everything about the service but the address
-        /// </summary>
-        private void LoadProductsWithDynamicallyEndpoint()
+        private void LoadProductsWithDynamicallyEndpointAndAnnouncement()
         {
-            //this.CreateAnnouncementService();
+            this.DiscoverServices();
+            this.CreateAnnouncementService();
 
+            //var proxy = this.CreateInventoryProxy();
             var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
             if (proxy == null)
             {
@@ -208,28 +208,57 @@ namespace Demo.Admin.ViewModels
 
             announcementService.OnlineAnnouncementReceived += (sender, args) =>
             {
-                if (args.EndpointDiscoveryMetadata.ContractTypeNames.FirstOrDefault(i => i.Name.Equals("IInventoryService")) != null)
-                {
-                    this._discoveredAddress = args.EndpointDiscoveryMetadata.Address;
-                    this.IsServiceOnline = true;
+                if (args.EndpointDiscoveryMetadata.ContractTypeNames.FirstOrDefault(i => i.Name.Equals("IInventoryService")) == null) return;
+                this._discoveredAddress = args.EndpointDiscoveryMetadata.Address;
+                this.IsServiceOnline = true;
 
-                    this.CanExecuteAddProductCommand(null);
-                }
+                this.CanExecuteAddProductCommand(null);
             };
 
             announcementService.OfflineAnnouncementReceived += (sender, args) =>
             {
-                if (args.EndpointDiscoveryMetadata.ContractTypeNames.FirstOrDefault(i => i.Name.Equals("IInventoryService")) != null)
-                {
-                    this._discoveredAddress = null;
-                    this.IsServiceOnline = false;
+                if (args.EndpointDiscoveryMetadata.ContractTypeNames.FirstOrDefault(i => i.Name.Equals("IInventoryService")) == null) return;
+                this._discoveredAddress = null;
+                this.IsServiceOnline = false;
 
-                    this.CanExecuteAddProductCommand(null);
-                }
+                this.CanExecuteAddProductCommand(null);
             };
 
             this._announcementService = new ServiceHost(announcementService);
             this._announcementService.Open();
+        }
+
+        #endregion
+
+        #region Discovering dynamically for service
+
+        /// <summary>
+        /// use it if you know everything about the service but the address
+        /// </summary>
+        private void LoadProductsWithDynamicallyEndpoint()
+        {
+            var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
+            if (proxy == null)
+            {
+                this.IsServiceOnline = false;
+                this.CanExecuteAddProductCommand(null);
+                return;
+            }
+
+            var products = proxy.GetProducts();
+            if (products != null && products.Length > 0)
+            {
+                foreach (var p in products)
+                {
+                    this._products.Add(p);
+                }
+            }
+
+            this.IsServiceOnline = true;
+            this.CanExecuteAddProductCommand(null);
+
+            // do housekeeping by yourself
+            ((IDisposable)proxy).Dispose();
         }
 
         #endregion
