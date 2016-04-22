@@ -14,7 +14,9 @@ namespace Demo.Client.Proxies.Service_Procies
         /// <summary>
         /// use this as importing c-tor when
         /// no dynamically endpoint discovery used
+        /// use [ImportingConstructor] if using hardcoded endpoint
         /// </summary>
+        //[ImportingConstructor]
         public InventoryClient()
         {
 
@@ -22,6 +24,7 @@ namespace Demo.Client.Proxies.Service_Procies
 
         /// <summary>
         /// if using dynamic endpoint discovery
+        /// use [ImportingConstructor] if using discovering the service
         /// </summary>
         /// <param name="endpointName"></param>
         [ImportingConstructor]

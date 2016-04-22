@@ -107,8 +107,75 @@ namespace Demo.Admin.ViewModels
         {
             this._products = new ObservableCollection<Product>();
 
-            #region Dynamic endpoints
+            this.LoadProductsWithDynamicallyEndpoint();
+            //this.LoadProductsWithDiscoveringEndpointWithSettings();
+            //this.LoadProductsWithHardcodedEndpoint();
+        }
 
+        #endregion
+
+        #region C-Tor
+
+        [ImportingConstructor]
+        public MaintainProductsViewModel(IServiceFactory serviceFactory)
+        {
+            this._serviceFactory = serviceFactory;
+
+            this.RegisterCommands();
+            this.RegisterMessengers();         
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void RegisterMessengers()
+        {
+            Messenger.Default.Register<ProductChangedMessage>(this, this.ReloadProducts);
+        }
+
+        private void ReloadProducts(ProductChangedMessage message)
+        {
+            this.Products.Clear();
+            var products = this._serviceFactory.CreateClient<IInventoryService>().GetProducts();
+            foreach( var p in products)
+            {
+                this.Products.Add(p);
+            }
+        }
+
+        private void RegisterCommands()
+        {
+            this.EditProductCommand = new DelegateCommand<Product>(OnEditProductCommand, CanExecuteEditProductCommand);
+            this.AddProductCommand = new DelegateCommand<object>(OnAddProductCommand, CanExecuteAddProductCommand);
+            this.DeactivateProductCommand = new DelegateCommand<Product>(OnDeactivateProductCommand, CanExecuteDeactivateProductCommand);
+            this.ActivateProductCommand = new DelegateCommand<Product>(OnActivateProductCommand, CanExecuteActivateProductCommand);
+        }
+
+        private void LoadProductsWithHardcodedEndpoint()
+        {
+            WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
+            {
+                var products = inventoryClient.GetProducts();
+                if (products != null && products.Length > 0)
+                {
+                    foreach (var p in products)
+                    {
+                        this._products.Add(p);
+                    }
+                }
+            });
+        }
+
+        #endregion
+
+        #region Discovering dynamically for service
+
+        /// <summary>
+        /// use it if you know everything about the service but the address
+        /// </summary>
+        private void LoadProductsWithDynamicallyEndpoint()
+        {
             //this.CreateAnnouncementService();
 
             var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
@@ -133,61 +200,7 @@ namespace Demo.Admin.ViewModels
 
             // do housekeeping by yourself
             ((IDisposable)proxy).Dispose();
-
-            #endregion
-
-            #region Discovering service
-
-            //this.DiscoverServices();
-
-            //var proxy = this.CreateInventoryProxy();
-            //if (proxy == null) return;
-
-            //var products = proxy.GetProducts();
-            //if (products != null && products.Length > 0)
-            //{
-            //    foreach (var p in products)
-            //    {
-            //        this._products.Add(p);
-            //    }
-            //}
-
-            //// do housekeeping by yourself
-            //((IDisposable)proxy).Dispose();
-
-            #endregion
-
-            #region Non-Discovering
-            //WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
-            //{
-            //    var products = inventoryClient.GetProducts();
-            //    if (products != null && products.Length > 0)
-            //    {
-            //        foreach (var p in products)
-            //        {
-            //            this._products.Add(p);
-            //        }
-            //    }
-            //});
-            #endregion
         }
-
-        #endregion
-
-        #region C-Tor
-
-        [ImportingConstructor]
-        public MaintainProductsViewModel(IServiceFactory serviceFactory)
-        {
-            this._serviceFactory = serviceFactory;
-
-            this.RegisterCommands();
-            this.RegisterMessengers();         
-        }
-
-        #endregion
-
-        #region Methods
 
         private void CreateAnnouncementService()
         {
@@ -213,33 +226,38 @@ namespace Demo.Admin.ViewModels
 
                     this.CanExecuteAddProductCommand(null);
                 }
-            };            
+            };
 
             this._announcementService = new ServiceHost(announcementService);
             this._announcementService.Open();
         }
 
-        private void RegisterMessengers()
-        {
-            Messenger.Default.Register<ProductChangedMessage>(this, this.ReloadProducts);
-        }
+        #endregion
 
-        private void ReloadProducts(ProductChangedMessage message)
+        #region Discovering for service with settings
+
+        /// <summary>
+        /// use it when you don't know anything about the servce
+        /// except the contract
+        /// </summary>
+        private void LoadProductsWithDiscoveringEndpointWithSettings()
         {
-            this.Products.Clear();
-            var products = this._serviceFactory.CreateClient<IInventoryService>().GetProducts();
-            foreach( var p in products)
+            this.DiscoverServices();
+
+            var proxy = this.CreateInventoryProxy();
+            if (proxy == null) return;
+
+            var products = proxy.GetProducts();
+            if (products != null && products.Length > 0)
             {
-                this.Products.Add(p);
+                foreach (var p in products)
+                {
+                    this._products.Add(p);
+                }
             }
-        }
 
-        private void RegisterCommands()
-        {
-            this.EditProductCommand = new DelegateCommand<Product>(OnEditProductCommand, CanExecuteEditProductCommand);
-            this.AddProductCommand = new DelegateCommand<object>(OnAddProductCommand, CanExecuteAddProductCommand);
-            this.DeactivateProductCommand = new DelegateCommand<Product>(OnDeactivateProductCommand, CanExecuteDeactivateProductCommand);
-            this.ActivateProductCommand = new DelegateCommand<Product>(OnActivateProductCommand, CanExecuteActivateProductCommand);
+            // do housekeeping by yourself
+            ((IDisposable)proxy).Dispose();
         }
 
         private void DiscoverServices()
@@ -251,6 +269,9 @@ namespace Demo.Admin.ViewModels
                 MaxResults = 1,
                 Duration = new TimeSpan(0, 0, 5)
             };
+
+            // scope => just another filter criteria
+            // if we have more then one implementation of the contract
             findCriteria.Scopes.Add(new Uri("http://www.xxx.com/pingo/demo/discoverability"));
 
             var findResponse = discoveryProxy.Find(findCriteria);
