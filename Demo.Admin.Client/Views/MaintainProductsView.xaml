@@ -31,8 +31,8 @@
                     Width="200"
                     HorizontalAlignment="Left"
                     Margin="0, 15"/>
-            <Grid Grid.Row="1">
-                <!--Visibility="{Binding Products, Converter={StaticResource modelToViz}}">-->
+            <Grid Grid.Row="1"
+                  Visibility="{Binding Products, Converter={StaticResource modelToViz}}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"
                                       SharedSizeGroup="links" />
@@ -63,7 +63,8 @@
                            FontWeight="Bold" />
             </Grid>
             <ItemsControl Grid.Row="2"
-                          ItemsSource="{Binding Products}">
+                          ItemsSource="{Binding Products}"
+                          Visibility="{Binding Products, Converter={StaticResource modelToViz}}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>

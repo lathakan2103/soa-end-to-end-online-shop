@@ -2,6 +2,7 @@
 using System.ComponentModel.Composition;
 using Core.Common.Contracts;
 using Core.Common.Core;
+using Core.Common.Extensions;
 
 namespace Demo.Client.Proxies
 {
@@ -17,7 +18,8 @@ namespace Demo.Client.Proxies
         /// <returns></returns>
         public T CreateClient<T>(string endpoint) where T : IServiceContract
         {
-            return ObjectBase.Container.GetExportedValue<T>(endpoint);
+            ObjectBase.Container.AddComposedValue("Dynamic.Endpoint", endpoint);
+            return ObjectBase.Container.GetExportedValue<T>();
         }
 
         T IServiceFactory.CreateClient<T>()

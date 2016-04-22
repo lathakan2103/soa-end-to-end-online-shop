@@ -11,17 +11,27 @@ namespace Demo.Client.Proxies.Service_Procies
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class InventoryClient : UserClientBase<IInventoryService>, IInventoryService
     {
+        /// <summary>
+        /// use this as importing c-tor when
+        /// no dynamically endpoint discovery used
+        /// </summary>
         public InventoryClient()
         {
 
         }
 
-        public InventoryClient(string endpointName) 
+        /// <summary>
+        /// if using dynamic endpoint discovery
+        /// </summary>
+        /// <param name="endpointName"></param>
+        [ImportingConstructor]
+        public InventoryClient([Import("Dynamic.Endpoint")] string endpointName) 
             : base(endpointName)
         {
 
         }
 
+        #region IInventoryService implementation
 
         public Product[] GetProducts()
         {
@@ -92,5 +102,7 @@ namespace Demo.Client.Proxies.Service_Procies
         {
             return Channel.GetMostWantedAsync(start, end);
         }
+
+        #endregion
     }
 }

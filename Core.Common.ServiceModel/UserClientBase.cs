@@ -14,6 +14,10 @@ namespace Core.Common.ServiceModel
             this.CheckSoapHeader();
         }
 
+        /// <summary>
+        /// use this c-tor when dynamic endpoint discovery
+        /// </summary>
+        /// <param name="endpoint"></param>
         public UserClientBase(string endpoint)
             : base(endpoint)
         {
@@ -22,12 +26,10 @@ namespace Core.Common.ServiceModel
 
         private void CheckSoapHeader()
         {
-            string userName = Thread.CurrentPrincipal.Identity.Name;
-            MessageHeader<string> header = new MessageHeader<string>(userName);
+            var userName = Thread.CurrentPrincipal.Identity.Name;
+            var header = new MessageHeader<string>(userName);
 
-            OperationContextScope contextScope =
-                            new OperationContextScope(InnerChannel);
-
+            var contextScope = new OperationContextScope(InnerChannel);
             OperationContext.Current.OutgoingMessageHeaders.Add(
                                       header.GetUntypedHeader("String", "System"));
         }        

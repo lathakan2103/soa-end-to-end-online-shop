@@ -29,9 +29,8 @@ namespace Demo.Client.Bootstrapper
                     catalog.Catalogs.Add(part);
 
             var container = new CompositionContainer(catalog);
-            
+
             return container;
         }
-
     }
 }

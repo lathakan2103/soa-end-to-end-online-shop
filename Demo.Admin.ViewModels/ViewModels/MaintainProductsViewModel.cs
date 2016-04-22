@@ -107,14 +107,17 @@ namespace Demo.Admin.ViewModels
         {
             this._products = new ObservableCollection<Product>();
 
-            #region Discovering service
+            #region Dynamic endpoints
 
-            this.DiscoverServices();
             //this.CreateAnnouncementService();
 
-            var proxy = this.CreateInventoryProxy();
-            //var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
-            if (proxy == null) return;
+            var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
+            if (proxy == null)
+            {
+                this.IsServiceOnline = false;
+                this.CanExecuteAddProductCommand(null);
+                return;
+            }
 
             var products = proxy.GetProducts();
             if (products != null && products.Length > 0)
@@ -125,8 +128,32 @@ namespace Demo.Admin.ViewModels
                 }
             }
 
+            this.IsServiceOnline = true;
+            this.CanExecuteAddProductCommand(null);
+
             // do housekeeping by yourself
             ((IDisposable)proxy).Dispose();
+
+            #endregion
+
+            #region Discovering service
+
+            //this.DiscoverServices();
+
+            //var proxy = this.CreateInventoryProxy();
+            //if (proxy == null) return;
+
+            //var products = proxy.GetProducts();
+            //if (products != null && products.Length > 0)
+            //{
+            //    foreach (var p in products)
+            //    {
+            //        this._products.Add(p);
+            //    }
+            //}
+
+            //// do housekeeping by yourself
+            //((IDisposable)proxy).Dispose();
 
             #endregion
 
@@ -155,8 +182,7 @@ namespace Demo.Admin.ViewModels
             this._serviceFactory = serviceFactory;
 
             this.RegisterCommands();
-            this.RegisterMessengers();
-            this.DiscoverServices();            
+            this.RegisterMessengers();         
         }
 
         #endregion

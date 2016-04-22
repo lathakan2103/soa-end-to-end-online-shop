@@ -9,7 +9,22 @@ namespace Core.Common.Extensions
 {
     public static class MefExtensions
     {
-        public static CompositionContainer Container;
+        private static readonly List<string> ComposedEportedValues = new List<string>();
+
+        public static void AddComposedValue(this CompositionContainer container, string key, string value)
+        {
+            if (ComposedEportedValues.Contains(value)) return;
+
+            ComposedEportedValues.Add(value);
+            container.ComposeExportedValue(key, value);
+        }
+
+        public static void RemoveComposedValue(this CompositionContainer container, string key)
+        {
+            if (!ComposedEportedValues.Contains(key)) return;
+
+            ComposedEportedValues.Remove(key);
+        }
 
         public static object GetExportedValueByType(this CompositionContainer container, Type type)
         {
@@ -30,7 +45,8 @@ namespace Core.Common.Extensions
             return null;
         }
 
-        public static IEnumerable<object> GetExportedValuesByType(this CompositionContainer container, Type type)
+        public static IEnumerable<object> GetExportedValuesByType(this CompositionContainer container, 
+            Type type)
         {
             foreach (var partDef in container.Catalog.Parts)
             {
