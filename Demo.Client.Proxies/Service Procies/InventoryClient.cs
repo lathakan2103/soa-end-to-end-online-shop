@@ -11,6 +11,18 @@ namespace Demo.Client.Proxies.Service_Procies
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class InventoryClient : UserClientBase<IInventoryService>, IInventoryService
     {
+        public InventoryClient()
+        {
+
+        }
+
+        public InventoryClient(string endpointName) 
+            : base(endpointName)
+        {
+
+        }
+
+
         public Product[] GetProducts()
         {
             return Channel.GetProducts();

@@ -168,6 +168,8 @@ namespace Demo.ServiceHost.Console
                 {
                     System.Console.WriteLine("");
                 }
+
+                System.Console.ForegroundColor = ConsoleColor.Gray;
             };
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.ServiceModel;
 using System.Threading;
 
@@ -10,6 +11,17 @@ namespace Core.Common.ServiceModel
         /// </summary>
         public UserClientBase()
         {
+            this.CheckSoapHeader();
+        }
+
+        public UserClientBase(string endpoint)
+            : base(endpoint)
+        {
+            this.CheckSoapHeader();
+        }
+
+        private void CheckSoapHeader()
+        {
             string userName = Thread.CurrentPrincipal.Identity.Name;
             MessageHeader<string> header = new MessageHeader<string>(userName);
 
@@ -18,6 +30,6 @@ namespace Core.Common.ServiceModel
 
             OperationContext.Current.OutgoingMessageHeaders.Add(
                                       header.GetUntypedHeader("String", "System"));
-        }
+        }        
     }
 }

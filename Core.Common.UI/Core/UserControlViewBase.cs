@@ -22,7 +22,7 @@ namespace Core.Common.UI.Core
 
         protected virtual void OnWireViewModelEvents(ViewModelBase viewModel) { }
         
-        void OnDataContextChanged(object sender, System.Windows.DependencyPropertyChangedEventArgs e)
+        void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             if (e.NewValue == null)
             {
