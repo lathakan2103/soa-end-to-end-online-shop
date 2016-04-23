@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Data.Entity;
 using System.Linq;
+using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using Demo.Business.Entities;
 using Demo.Data.Contracts;
 using Demo.Data.Contracts.Dto;
@@ -41,37 +44,74 @@ namespace Demo.Data.DataRepositories
         {
             using (var ctx = new DemoContext())
             {
-                var query = from cart in ctx.CartSet
-                    where cart.CustomerId == id
-                    join item in ctx.CartItemSet on cart.CartId equals item.CartId
-                    join prod in ctx.ProductSet on item.ProductId equals prod.ProductId
-                    select new CartInfoDto
-                    {
-                        CartId = cart.CartId,
-                        CustomerId = id,
-                        Approved = cart.Approved,
-                        Canceled = cart.Canceled,
-                        Created = cart.Created,
-                        Shipped = cart.Shipped,
-                        ShippingCost = cart.ShippingCost,
-                        Total = 100,
-                        CartItemList = new List<CartItemInfoDto>
+                var carts = ctx.CartSet.Where(c => c.CustomerId == id).ToList();
+                var dtoList = new List<CartInfoDto>();
+                foreach (var c in carts)
+                {
+                    dtoList.Add(
+                        new CartInfoDto
                         {
-                            new CartItemInfoDto
-                            {
-                                CartItemId = item.CartItemId,
-                                CartId = item.CartId,
-                                Quantity = item.Quantity,
-                                Product = prod
-                            }
-                        }
-                    };
+                            CustomerId = c.CustomerId,
+                            CartId = c.CartId,
+                            StilOpen = c.StilOpen,
+                            Approved = c.Approved,
+                            Created = c.Created,
+                            Canceled = c.Canceled,
+                            Shipped = c.Shipped,
+                            ShippingCost = c.ShippingCost
+                        });
+                }
 
                 return new CustomerShoppingHistoryInfoDto
                 {
                     Customer = ctx.CustomerSet.SingleOrDefault(c => c.CustomerId == id),
-                    CartList = query.ToList()
+                    CartList = dtoList
                 };
+            }
+        }
+
+        public List<CartItemInfoDto> GetCartItemsByCartId(int cartId)
+        {
+            List<CartItem> items = new List<CartItem>();
+            List<CartItemInfoDto> dtoList = new List<CartItemInfoDto>();
+            using (var ctx = new DemoContext())
+            {
+                items = ctx.CartItemSet.Where(c => c.CartId == cartId).ToList();
+                
+            }
+
+            using (var ctx = new DemoContext())
+            {
+                foreach (var i in items)
+                {
+                    var product = ctx.ProductSet.SingleOrDefault(p => p.ProductId == i.ProductId);
+                    dtoList.Add(
+                        new CartItemInfoDto
+                        {
+                            CartId = i.CartId,
+                            CartItemId = i.CartItemId,
+                            Quantity = i.Quantity,
+                            Product = product
+                        });
+                }
+            }
+
+            return dtoList;
+
+        } 
+
+        public void CloseCart(int cartId)
+        {
+            using (var ctx = new DemoContext())
+            {
+                var cart = ctx.CartSet.SingleOrDefault(c => c.CartId == cartId);
+                if (cart == null || !cart.StilOpen)
+                {
+
+                }
+
+                cart.StilOpen = false;
+                ctx.SaveChanges();
             }
         }
 

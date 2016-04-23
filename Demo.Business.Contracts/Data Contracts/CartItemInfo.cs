@@ -14,6 +14,9 @@ namespace Demo.Business.Contracts
         public int CartId { get; set; }
 
         [DataMember]
+        public bool StilOpen { get; set; }
+
+        [DataMember]
         public Product Product { get; set; }
 
         [DataMember]

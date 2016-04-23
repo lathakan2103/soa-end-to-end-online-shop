@@ -98,6 +98,11 @@ namespace Demo.Client.Proxies.Service_Procies
             Channel.CloseCart(cartId);
         }
 
+        public Cart GetActiveCart(int customerId)
+        {
+            return Channel.GetActiveCart(customerId);
+        }
+
         public Task<CustomerShoppingHistoryInfo> GetShoppingHistoryAsync(string loginEmail)
         {
             return Channel.GetShoppingHistoryAsync(loginEmail);
@@ -191,6 +196,11 @@ namespace Demo.Client.Proxies.Service_Procies
         public Task CloseCartAsync(int cartId)
         {
             return Channel.CloseCartAsync(cartId);
+        }
+
+        public Task<Cart> GetActiveCartAsync(int customerId)
+        {
+            return Channel.GetActiveCartAsync(customerId);
         }
     }
 }

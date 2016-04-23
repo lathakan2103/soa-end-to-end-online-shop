@@ -20,6 +20,9 @@ namespace Demo.Data.Contracts.Dto
         public decimal Total { get; set; }
 
         [DataMember]
+        public bool StilOpen { get; set; }
+
+        [DataMember]
         public decimal ShippingCost { get; set; }
 
         [DataMember]

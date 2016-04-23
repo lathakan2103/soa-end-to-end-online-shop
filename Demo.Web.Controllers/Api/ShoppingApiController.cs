@@ -113,13 +113,18 @@ namespace Demo.Web.Controllers.Api
                 var product = this._inventoryService.GetProductById(productId);
                 var id = this._customerService.GetCustomerByLogin(User.Identity.Name).CustomerId;
 
-                var cart = this._shoppingService.AddCart(
-                    new Cart
-                    {
-                        CustomerId = id,
-                        Created = DateTime.Now,
-                        Total = product.Price
-                    });
+                var cart = this._shoppingService.GetActiveCart(id);
+                if (cart == null)
+                {
+                    cart = this._shoppingService.AddCart(
+                         new Cart
+                         {
+                             CustomerId = id,
+                             Created = DateTime.Now,
+                             Total = product.Price,
+                             StilOpen = true
+                         });
+                }
 
                 this._shoppingService.AddCartItemToCart(
                     cart.CartId, 
@@ -148,6 +153,26 @@ namespace Demo.Web.Controllers.Api
                 }
 
                 return request.CreateResponse(HttpStatusCode.NotFound);
+            });
+        }
+
+        [HttpPost]
+        [Route("closecart")]
+        public HttpResponseMessage CloseCart(HttpRequestMessage request)
+        {
+            return GetHttpResponseMessage(request, () =>
+            {
+                var id = this._customerService.GetCustomerByLogin(User.Identity.Name).CustomerId;
+                var cart = this._shoppingService.GetActiveCart(id);
+
+                if (cart == null)
+                {
+                    return request.CreateResponse(HttpStatusCode.NotFound);
+                }
+
+                this._shoppingService.CloseCart(cart.CartId);
+
+                return request.CreateResponse(HttpStatusCode.OK);
             });
         }
 

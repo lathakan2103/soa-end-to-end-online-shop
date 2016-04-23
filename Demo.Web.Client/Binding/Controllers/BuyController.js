@@ -28,6 +28,15 @@ buyModule.controller("BuyController", function ($scope, $http, $window, $locatio
         $window.history.back();
     }
 
+    $scope.closeCart = function () {
+        controllerHelper.apiPost(
+            'api/shopping/closecart',
+            null,
+            function (result) {
+                $location.path(Demo.rootPath + 'customer/buy');
+            });
+    };
+
 });
 
 buyModule.controller("ProductListController", function ($scope, $http, $window, $location, controllerHelper, validator) {
@@ -82,6 +91,15 @@ buyModule.controller("ConfirmController", function ($scope, $http, $window, $loc
 
     $scope.goToProductList = function () {
         $location.path(Demo.rootPath + 'customer/buy');
+    };
+
+    $scope.closeCart = function () {
+        controllerHelper.apiPost(
+            'api/shopping/closecart',
+            null,
+            function (result) {
+                $location.path(Demo.rootPath + 'customer/buy');
+            });
     };
 
 });

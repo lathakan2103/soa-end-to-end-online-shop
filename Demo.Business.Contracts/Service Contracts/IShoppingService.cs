@@ -84,5 +84,10 @@ namespace Demo.Business.Contracts
         [FaultContract(typeof(NotFoundException))]
         [FaultContract(typeof(AuthorizationValidationException))]
         void CloseCart(int cartId);
+
+        [OperationContract]
+        [FaultContract(typeof(NotFoundException))]
+        [FaultContract(typeof(AuthorizationValidationException))]
+        Cart GetActiveCart(int customerId);
     }
 }

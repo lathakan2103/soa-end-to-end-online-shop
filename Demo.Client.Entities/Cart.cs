@@ -17,6 +17,7 @@ namespace Demo.Client.Entities
         private DateTime? _shipped;
         private decimal _total;
         private decimal _shippingCost;
+        private bool _stilOpen;
 
         #endregion
 
@@ -74,6 +75,17 @@ namespace Demo.Client.Entities
                 if (this._shippingCost == value) return;
                 this._shippingCost = value;
                 OnPropertyChanged(() => this.ShippingCost);
+            }
+        }
+
+        public bool StilOpen
+        {
+            get { return this._stilOpen; }
+            set
+            {
+                if (this._stilOpen == value) return;
+                this._stilOpen = value;
+                OnPropertyChanged(() => this.StilOpen);
             }
         }
 

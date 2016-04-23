@@ -39,7 +39,8 @@ namespace Demo.Business.Business_Engines
                 cartList.Add(ci);
                 decimal total = 0;
 
-                foreach (var item in cart.CartItemList)
+                var cartItems = cartRepository.GetCartItemsByCartId(cart.CartId);
+                foreach (var item in cartItems)
                 {
                     ci.CartItemList.Add(
                         new CartItemInfo
@@ -55,7 +56,11 @@ namespace Demo.Business.Business_Engines
                 ci.Total = total;
             }
 
-            var result = new CustomerShoppingHistoryInfo { Customer = carts.Customer, CartList = new CartInfo[cartList.Count] };
+            var result = new CustomerShoppingHistoryInfo
+            {
+                Customer = carts.Customer,
+                CartList = new CartInfo[cartList.Count]
+            };
             for (var i = 0; i < cartList.Count; i++)
             {
                 result.CartList[i] = cartList[i];

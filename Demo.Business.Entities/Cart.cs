@@ -24,6 +24,9 @@ namespace Demo.Business.Entities
         public decimal ShippingCost { get; set; }
 
         [DataMember]
+        public bool StilOpen { get; set; }
+
+        [DataMember]
         public DateTime Created { get; set; }
 
         [DataMember]

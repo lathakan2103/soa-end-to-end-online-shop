@@ -527,8 +527,31 @@ namespace Demo.Business.Managers
                 // make user equality with the login email
                 ValidateAuthorization(customer);
 
-                // process cart and send it to the db
-                shoppingEngine.ProcessOrder(cart);
+                cartRepository.CloseCart(cartId);
+            });
+        }
+
+        //[PrincipalPermission(SecurityAction.Demand, Name = Security.DemoUser)]
+        public Cart GetActiveCart(int customerId)
+        {
+            return ExecuteFaultHandledOperation(() =>
+            {
+                var customerRepository = this._repositoryFactory.GetDataRepository<ICustomerRepository>();
+                var cartRepository = this._repositoryFactory.GetDataRepository<ICartRepository>();
+                var shoppingEngine = this._businessFactory.GetBusinessEngine<IShoppingEngine>();
+
+                var cart = cartRepository.Get().SingleOrDefault(c => c.StilOpen && c.CustomerId == customerId);
+                if (cart == null)
+                {
+                    return null;
+                }
+
+                var customer = shoppingEngine.CheckCustomerOwnership(customerRepository, customerId);
+
+                // make user equality with the login email
+                ValidateAuthorization(customer);
+
+                return cart;
             });
         }
 

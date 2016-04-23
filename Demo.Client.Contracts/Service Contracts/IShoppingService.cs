@@ -87,6 +87,11 @@ namespace Demo.Client.Contracts
         [FaultContract(typeof(AuthorizationValidationException))]
         void CloseCart(int cartId);
 
+        [OperationContract]
+        [FaultContract(typeof(NotFoundException))]
+        [FaultContract(typeof(AuthorizationValidationException))]
+        Cart GetActiveCart(int customerId);
+
         #region Async
 
         [OperationContract]
@@ -142,6 +147,9 @@ namespace Demo.Client.Contracts
 
         [OperationContract]
         Task CloseCartAsync(int cartId);
+
+        [OperationContract]
+        Task<Cart> GetActiveCartAsync(int customerId);
 
         #endregion
     }
