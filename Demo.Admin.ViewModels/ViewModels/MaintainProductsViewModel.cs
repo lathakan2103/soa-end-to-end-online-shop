@@ -107,10 +107,10 @@ namespace Demo.Admin.ViewModels
         {
             this._products = new ObservableCollection<Product>();
 
-            this.LoadProductsWithDynamicallyEndpointAndAnnouncement();
+            //this.LoadProductsWithDynamicallyEndpointAndAnnouncement();
             //this.LoadProductsWithDynamicallyEndpoint();
             //this.LoadProductsWithDiscoveringEndpointWithSettings();
-            //this.LoadProductsWithHardcodedEndpoint(); // comment in for unit testing
+            this.LoadProductsWithHardcodedEndpoint(); // comment in for unit testing
         }
 
         #endregion
@@ -165,6 +165,9 @@ namespace Demo.Admin.ViewModels
                         this._products.Add(p);
                     }
                 }
+
+                this.IsServiceOnline = true;
+                this.CanExecuteAddProductCommand(null);
             });
         }
 
@@ -177,7 +180,6 @@ namespace Demo.Admin.ViewModels
             this.DiscoverServices();
             this.CreateAnnouncementService();
 
-            //var proxy = this.CreateInventoryProxy();
             var proxy = this._serviceFactory.CreateClient<IInventoryService>("dynamicInventoryService");
             if (proxy == null)
             {

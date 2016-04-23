@@ -16,7 +16,7 @@ namespace Demo.Client.Proxies.Service_Procies
         /// no dynamically endpoint discovery used and for unit tests!
         /// use [ImportingConstructor] if using hardcoded endpoint
         /// </summary>
-        //[ImportingConstructor]
+        [ImportingConstructor]
         public InventoryClient()
         {
 
@@ -27,7 +27,7 @@ namespace Demo.Client.Proxies.Service_Procies
         /// use [ImportingConstructor] if using discovering the service
         /// </summary>
         /// <param name="endpointName"></param>
-        [ImportingConstructor]
+        //[ImportingConstructor]
         public InventoryClient([Import("Dynamic.Endpoint")] string endpointName) 
             : base(endpointName)
         {
