@@ -30,12 +30,10 @@ namespace Demo.ServiceHost.Console
             System.Console.WriteLine("");
 
             // initalize the service manager
-            var hostCustomerManager =
-                new System.ServiceModel.ServiceHost(typeof(CustomerManager));
-            var hostInventoryManager =
-                new System.ServiceModel.ServiceHost(typeof(InventoryManager));
-            var hostShoppingManager =
-                new System.ServiceModel.ServiceHost(typeof(ShoppingManager));
+            
+            var hostCustomerManager = new System.ServiceModel.ServiceHost(typeof(CustomerManager));
+            var hostInventoryManager = new System.ServiceModel.ServiceHost(typeof(InventoryManager));
+            var hostShoppingManager = new System.ServiceModel.ServiceHost(typeof(ShoppingManager));
 
             // start the service manager
             StartService(hostCustomerManager, "CustomerManager");
@@ -50,10 +48,6 @@ namespace Demo.ServiceHost.Console
             System.Console.WriteLine("ShoppingManager monitoring started.");
 
             System.Console.WriteLine("");
-            System.Console.WriteLine("Press [Enter] to stop services.");
-            System.Console.WriteLine("");
-            System.Console.WriteLine("");
-            System.Console.WriteLine("");
             System.Console.WriteLine("Start monitoring service calls");
             System.Console.WriteLine("-------------------------------------------------------------------------");
             System.Console.WriteLine("");
@@ -65,7 +59,6 @@ namespace Demo.ServiceHost.Console
             StopService(hostInventoryManager, "InventoryManager");
             StopService(hostShoppingManager, "ShoppingManager");
 
-            System.Console.WriteLine("Press [Enter] to exit.");
             System.Console.WriteLine("");
             System.Console.ReadKey();
         }
@@ -108,7 +101,7 @@ namespace Demo.ServiceHost.Console
         /// <param name="service"></param>
         private static void StartService(System.ServiceModel.ServiceHost host, string service)
         {
-            CheckForBehaviors(host);
+            CheckForBehaviors(host); // comment out for testing
 
             host.Open();
             System.Console.WriteLine("Service => {0} started...", service);

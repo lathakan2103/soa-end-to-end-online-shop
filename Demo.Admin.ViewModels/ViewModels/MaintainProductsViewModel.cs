@@ -110,7 +110,7 @@ namespace Demo.Admin.ViewModels
             this.LoadProductsWithDynamicallyEndpointAndAnnouncement();
             //this.LoadProductsWithDynamicallyEndpoint();
             //this.LoadProductsWithDiscoveringEndpointWithSettings();
-            //this.LoadProductsWithHardcodedEndpoint();
+            //this.LoadProductsWithHardcodedEndpoint(); // comment in for unit testing
         }
 
         #endregion

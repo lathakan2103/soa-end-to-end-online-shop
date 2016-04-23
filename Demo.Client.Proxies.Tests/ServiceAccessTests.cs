@@ -3,6 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Demo.Client.Proxies.Tests
 {
+    /// <summary>
+    /// unit tests only for hardcoded endpoint !!!!
+    /// not for discovering endpoints
+    /// </summary>
     [TestClass]
     public class ServiceAccessTests
     {

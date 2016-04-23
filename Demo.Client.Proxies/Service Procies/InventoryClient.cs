@@ -13,7 +13,7 @@ namespace Demo.Client.Proxies.Service_Procies
     {
         /// <summary>
         /// use this as importing c-tor when
-        /// no dynamically endpoint discovery used
+        /// no dynamically endpoint discovery used and for unit tests!
         /// use [ImportingConstructor] if using hardcoded endpoint
         /// </summary>
         //[ImportingConstructor]

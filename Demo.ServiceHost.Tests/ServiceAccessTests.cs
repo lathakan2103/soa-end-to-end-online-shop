@@ -4,6 +4,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Demo.ServiceHost.Tests
 {
+    /// <summary>
+    /// unit tests only for hardcoded endpoint !!!!
+    /// not for discovering endpoints
+    /// </summary>
     [TestClass]
     public class ServiceAccessTests
     {
