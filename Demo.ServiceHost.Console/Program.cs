@@ -7,7 +7,6 @@ using Core.Common.Core;
 using Demo.Business.Bootstrapper;
 using Demo.Business.Managers;
 using Timer = System.Timers.Timer;
-using Demo.Business.Managers.Monitoring;
 
 namespace Demo.ServiceHost.Console
 {
@@ -101,8 +100,6 @@ namespace Demo.ServiceHost.Console
         /// <param name="service"></param>
         private static void StartService(System.ServiceModel.ServiceHost host, string service)
         {
-            CheckForBehaviors(host); // comment out for testing
-
             host.Open();
             System.Console.WriteLine("Service => {0} started...", service);
 
@@ -115,55 +112,6 @@ namespace Demo.ServiceHost.Console
             }
 
             System.Console.WriteLine();
-        }
-
-        /// <summary>
-        /// checks if additional behaviors has been installed
-        /// and initializes them
-        /// </summary>
-        /// <param name="host"></param>
-        private static void CheckForBehaviors(System.ServiceModel.ServiceHost host)
-        {
-            var behavior = host.Description.Behaviors.Find<OperationReportServiceBehaviorAttribute>();
-            if (behavior == null)
-            {
-                behavior = new OperationReportServiceBehaviorAttribute(true);
-                host.Description.Behaviors.Add(behavior);
-            }
-
-            // register monitoring events (before- / after- operation call)
-            behavior.ServiceOperationCalled += (sender, args) =>
-            {
-                var direction = args.Direction.ToUpper();
-                if (direction.Equals("UP"))
-                {
-                    System.Console.ForegroundColor = ConsoleColor.Green;
-                }
-                else
-                {
-                    System.Console.ForegroundColor = ConsoleColor.Yellow;
-                }
-
-                System.Console.WriteLine(string.Format("{0} - {3} => '{1}.{2}' # {4}",
-                    string.Format("am {0}.{1}.{2} um {3}.{4}.{5}",
-                            DateTime.Now.Day,
-                            DateTime.Now.Month,
-                            DateTime.Now.Year,
-                            DateTime.Now.Hour,
-                            DateTime.Now.Minute,
-                            DateTime.Now.Second),
-                    args.ServiceName,
-                    args.OperationName,
-                    direction.Equals("UP") ? "AFTER " : "BEFORE",
-                    GetParams(args.Parameter)));
-
-                if (direction.Equals("UP"))
-                {
-                    System.Console.WriteLine("");
-                }
-
-                System.Console.ForegroundColor = ConsoleColor.Gray;
-            };
         }
 
         private static object GetParams(object[] parameter)

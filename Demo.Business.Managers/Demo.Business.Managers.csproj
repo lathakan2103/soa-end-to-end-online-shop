@@ -48,11 +48,6 @@
     <Compile Include="Managers\InventoryManager.cs" />
     <Compile Include="Managers\CustomerManager.cs" />
     <Compile Include="Managers\ShoppingManager.cs" />
-    <Compile Include="Monitoring\OperationInfoEventArgs.cs" />
-    <Compile Include="Monitoring\OperationReportServiceBehaviorExtension.cs" />
-    <Compile Include="Monitoring\OperationReportServiceBehaviorAttribute.cs" />
-    <Compile Include="Monitoring\OperationReportOperationBehaviorAttribute.cs" />
-    <Compile Include="Monitoring\OperationReportParameterInspector.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
