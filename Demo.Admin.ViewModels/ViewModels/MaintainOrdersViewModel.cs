@@ -3,10 +3,12 @@ using Core.Common.Contracts;
 using Core.Common.UI.Core;
 using Demo.Client.Contracts;
 using Demo.Client.Entities;
+using Demo.Client.Proxies.Service_Procies;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 
 namespace Demo.Admin.ViewModels
 {
@@ -18,6 +20,7 @@ namespace Demo.Admin.ViewModels
 
         private readonly IServiceFactory _serviceFactory;
         private ObservableCollection<Cart> _carts;
+        private bool _isTest = false;
 
         #endregion
 
@@ -33,6 +36,26 @@ namespace Demo.Admin.ViewModels
                 OnPropertyChanged(() => this.Carts);
             }
         }
+
+        #endregion
+
+        #region C-Tor
+
+        [ImportingConstructor]
+        public MaintainOrdersViewModel(IServiceFactory serviceFactory)
+        {
+            this._serviceFactory = serviceFactory;
+            this.RegisterCommands();
+        }
+
+        public MaintainOrdersViewModel(IServiceFactory serviceFactory, bool isTest)
+        {
+            this._serviceFactory = serviceFactory;
+            this.RegisterCommands();
+
+            this._isTest = true;
+        }
+
         #endregion
 
         #region Events
@@ -62,8 +85,11 @@ namespace Demo.Admin.ViewModels
         {
             this._carts = new ObservableCollection<Cart>();
 
-            WithClient(this._serviceFactory.CreateClient<IShoppingService>(), shoppingClient =>
+            var proxy = this._serviceFactory.CreateClient<IShoppingService>();
+            WithClient(proxy, shoppingClient =>
             {
+                this.SetCredentials(proxy);
+
                 var carts = shoppingClient.GetCarts();
                 if (carts != null)
                 {
@@ -77,23 +103,26 @@ namespace Demo.Admin.ViewModels
 
         #endregion
 
-        #region C-Tor
-
-        [ImportingConstructor]
-        public MaintainOrdersViewModel(IServiceFactory serviceFactory)
-        {
-            this._serviceFactory = serviceFactory;
-            this.RegisterCommands();
-        }
-
-        #endregion
-
         #region Methods
 
         private void RegisterCommands()
         {
             ApproveOrderCommand = new DelegateCommand<Cart>(OnApproveOrderCommand);
             ShippOrderCommand = new DelegateCommand<Cart>(OnShippOrderCommand);
+        }
+
+        private void SetCredentials(IShoppingService shoppingService)
+        {
+            if (this._isTest) return;
+
+            // Remove the ClientCredentials behavior. 
+            var credentials = (shoppingService as ShoppingClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+
+            // Add a custom client credentials instance to the behaviors collection. 
+            (shoppingService as ShoppingClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
         }
 
         #endregion
@@ -104,8 +133,11 @@ namespace Demo.Admin.ViewModels
         {
             try
             {
-                WithClient(this._serviceFactory.CreateClient<IShoppingService>(), shoppingClient =>
+                var proxy = this._serviceFactory.CreateClient<IShoppingService>();
+                WithClient(proxy, shoppingClient =>
                 {
+                    this.SetCredentials(proxy);
+
                     shoppingClient.SetCartAsApproved(cart.CartId);
                     cart.Approved = shoppingClient.GetCartByCartId(cart.CartId).Approved;
                 });
@@ -124,8 +156,11 @@ namespace Demo.Admin.ViewModels
         {
             try
             {
-                WithClient(this._serviceFactory.CreateClient<IShoppingService>(), shoppingClient =>
+                var proxy = this._serviceFactory.CreateClient<IShoppingService>();
+                WithClient(proxy, shoppingClient =>
                 {
+                    this.SetCredentials(proxy);
+
                     shoppingClient.SetCartAsShipped(cart.CartId);
                     cart.Shipped = shoppingClient.GetCartByCartId(cart.CartId).Shipped;
                 });

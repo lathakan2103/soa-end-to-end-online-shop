@@ -41,6 +41,10 @@
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.ServiceBus, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.ServiceBus.3.2.0\lib\net45-full\Microsoft.ServiceBus.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -91,6 +95,10 @@
     <ProjectReference Include="..\Demo.Business.Managers\Demo.Business.Managers.csproj">
       <Project>{0CEA14EE-AA7B-482E-963E-75B04911BA4D}</Project>
       <Name>Demo.Business.Managers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.Security\Demo.Security.csproj">
+      <Project>{b8814c1e-b475-40f9-a3c0-82c7f1de2cf9}</Project>
+      <Name>Demo.Security</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

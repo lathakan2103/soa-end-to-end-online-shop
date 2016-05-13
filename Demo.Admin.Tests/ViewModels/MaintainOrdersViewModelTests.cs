@@ -29,7 +29,7 @@ namespace Demo.Admin.Tests.ViewModels
             serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().SetCartAsApproved(1)).Verifiable();
             serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().GetCartByCartId(1)).Returns(approvedCart);
 
-            var vm = new MaintainOrdersViewModel(serviceFactory.Object);
+            var vm = new MaintainOrdersViewModel(serviceFactory.Object, true);
             vm.ApproveOrderCommand.Execute(cart);
 
             Assert.IsNotNull(cart.Approved);
@@ -53,7 +53,7 @@ namespace Demo.Admin.Tests.ViewModels
             serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().SetCartAsShipped(1)).Verifiable();
             serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().GetCartByCartId(1)).Returns(approvedCart);
 
-            var vm = new MaintainOrdersViewModel(serviceFactory.Object);
+            var vm = new MaintainOrdersViewModel(serviceFactory.Object, true);
             vm.ShippOrderCommand.Execute(cart);
 
             Assert.IsNotNull(cart.Shipped);

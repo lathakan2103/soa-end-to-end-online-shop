@@ -5,6 +5,7 @@ using Demo.Admin.ViewModels;
 using Demo.Client.Entities;
 using Demo.Client.Contracts;
 using GalaSoft.MvvmLight.Messaging;
+using Core.Common.Contracts;
 
 namespace Demo.Admin.Tests.ViewModels
 {
@@ -14,9 +15,9 @@ namespace Demo.Admin.Tests.ViewModels
         [TestMethod]
         public void test_cancel_command()
         {
-            var inventoryService = new Mock<IInventoryService>();
+            var serviceFactory = new Mock<IServiceFactory>();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object, null);
+            var vm = new EditProductDialogViewModel(serviceFactory.Object);
             vm.CurrentProduct = new Product();
 
             Assert.IsNotNull(vm.CurrentProduct);
@@ -45,17 +46,17 @@ namespace Demo.Admin.Tests.ViewModels
                 IsActive = true
             };
 
-            var inventoryService = new Mock<IInventoryService>();
+            var serviceFactory = new Mock<IServiceFactory>();
             var messenger = new Mock<IMessenger>();
             messenger.Setup(obj => obj.Send(new ProductChangedMessage())).Verifiable();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object, messenger.Object)
+            var vm = new EditProductDialogViewModel(serviceFactory.Object, messenger.Object)
             {
                 CurrentProduct = productToUpdate
             };
 
-            inventoryService.Setup(obj => obj.GetProductById(0, true)).Returns(new Product());
-            inventoryService.Setup(obj => obj.UpdateProduct(productToUpdate)).Returns(addedProduct);
+            serviceFactory.Setup(obj => obj.CreateClient<IInventoryService>().GetProductById(0, true)).Returns(new Product());
+            serviceFactory.Setup(obj => obj.CreateClient<IInventoryService>().UpdateProduct(productToUpdate)).Returns(addedProduct);
             
             vm.SaveCommand.Execute(null);
         }
@@ -80,18 +81,18 @@ namespace Demo.Admin.Tests.ViewModels
                 IsActive = true
             };
 
-            var inventoryService = new Mock<IInventoryService>();
+            var serviceFactory = new Mock<IServiceFactory>();
             var messenger = new Mock<IMessenger>();
             messenger.Setup(obj => obj.Send(new ProductChangedMessage())).Verifiable();
 
-            var vm = new EditProductDialogViewModel(inventoryService.Object, messenger.Object)
+            var vm = new EditProductDialogViewModel(serviceFactory.Object, messenger.Object)
             {
                 CurrentProduct = productToUpdate
             };
             vm.CurrentProduct.Name = "UPDATED";
 
-            inventoryService.Setup(obj => obj.GetProductById(1, true)).Returns(productToUpdate);
-            inventoryService.Setup(obj => obj.UpdateProduct(productToUpdate)).Returns(updatedProduct);
+            serviceFactory.Setup(obj => obj.CreateClient<IInventoryService>().GetProductById(1, true)).Returns(productToUpdate);
+            serviceFactory.Setup(obj => obj.CreateClient<IInventoryService>().UpdateProduct(productToUpdate)).Returns(updatedProduct);
 
             vm.SaveCommand.Execute(null);
         }

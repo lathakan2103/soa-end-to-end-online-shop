@@ -7,6 +7,8 @@ using System.ComponentModel.Composition;
 using Demo.Client.Entities;
 using Core.Common.Core;
 using Core.Common.Contracts;
+using System.ServiceModel.Description;
+using Demo.Client.Proxies.Service_Procies;
 
 namespace Demo.Admin.ViewModels
 {
@@ -19,9 +21,9 @@ namespace Demo.Admin.ViewModels
         private bool _isOpen;
         private string _title;
         private Product _model;
-        private readonly IInventoryService _inventoryService;
         private Product _currentModel;
         private IMessenger _messenger;
+        private readonly IServiceFactory _serviceFactory;
 
         #endregion
 
@@ -83,22 +85,17 @@ namespace Demo.Admin.ViewModels
         #region C-Tor
 
         [ImportingConstructor]
-        public EditProductDialogViewModel(IInventoryService inventoryService)
+        public EditProductDialogViewModel(IServiceFactory serviceFactory)
         {
-            this._inventoryService = inventoryService;
+            this._serviceFactory = serviceFactory;
+
             this.RegisterCommands();
             this.CurrentProduct = null;
         }
 
-        /// <summary>
-        /// only for testing purposes
-        /// need to mock IMessenger
-        /// </summary>
-        /// <param name="inventoryService"></param>
-        /// <param name="messenger"></param>
-        public EditProductDialogViewModel(IInventoryService inventoryService, IMessenger messenger)
+        public EditProductDialogViewModel(IServiceFactory serviceFactory, IMessenger messenger)
         {
-            this._inventoryService = inventoryService;
+            this._serviceFactory = serviceFactory;
             this.RegisterCommands();
             this.CurrentProduct = null;
 
@@ -142,6 +139,21 @@ namespace Demo.Admin.ViewModels
             this.CurrentProduct.Price           = product.Price;
         }
 
+        private void SetCredentials(IInventoryService inventoryClient)
+        {
+            // for test purposes only
+            if (this._messenger != null) return;
+
+            // Remove the ClientCredentials behavior. 
+            var credentials = (inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+
+            // Add a custom client credentials instance to the behaviors collection. 
+            (inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
+        }
+
         #endregion
 
         #region On...Command
@@ -159,25 +171,34 @@ namespace Demo.Admin.ViewModels
 
         private void OnSaveCommand(object obj)
         {
-            ValidateModel();
-
-            if (!IsValid) return;
-
-            var p = this._inventoryService.GetProductById(this.CurrentProduct.ProductId, true) ?? new Product();
-
-            p.Name = this.CurrentProduct.Name;
-            p.Description = this.CurrentProduct.Description;
-            p.Price = this.CurrentProduct.Price;
-            p.IsActive = this.CurrentProduct.IsActive;
-
-            var result = this._inventoryService.UpdateProduct(p);
-
-            if (this._messenger == null)
+            var proxy = this._serviceFactory.CreateClient<IInventoryService>();
+            WithClient(proxy, inventoryClient =>
             {
-                Messenger.Default.Send(new ProductChangedMessage());
-            }            
+                ValidateModel();
 
-            this.OkCommand.Execute(null);
+                if (!IsValid) return;
+
+                this.SetCredentials(proxy);
+
+                var p = proxy.GetProductById(this.CurrentProduct.ProductId, true) ?? new Product();
+
+                p.Name = this.CurrentProduct.Name;
+                p.Description = this.CurrentProduct.Description;
+                p.Price = this.CurrentProduct.Price;
+                p.IsActive = this.CurrentProduct.IsActive;
+
+                var result = proxy.UpdateProduct(p);
+
+                // for test purposes only
+                if (this._messenger == null)
+                {
+                    Messenger.Default.Send(new ProductChangedMessage());
+                }
+
+                this.OkCommand.Execute(null);
+            });
+
+            
         }
 
         #endregion        

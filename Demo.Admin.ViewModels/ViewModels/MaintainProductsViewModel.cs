@@ -11,6 +11,8 @@ using Core.Common;
 using System.ServiceModel;
 using System.ServiceModel.Discovery;
 using System.Linq;
+using System.ServiceModel.Description;
+using Demo.Client.Proxies.Service_Procies;
 
 namespace Demo.Admin.ViewModels
 {
@@ -24,6 +26,7 @@ namespace Demo.Admin.ViewModels
         private ObservableCollection<Product> _products;
         private EditProductDialogViewModel _editProductDialog;
         private Product _selectedProduct;
+        private bool _isTest = false;
 
         #endregion
 
@@ -108,6 +111,16 @@ namespace Demo.Admin.ViewModels
             this.RegisterMessengers();
         }
 
+        public MaintainProductsViewModel(IServiceFactory serviceFactory, bool isTest)
+        {
+            this._serviceFactory = serviceFactory;
+
+            this.RegisterCommands();
+            this.RegisterMessengers();
+
+            this._isTest = isTest;
+        }
+
         #endregion
 
         #region Methods
@@ -120,11 +133,7 @@ namespace Demo.Admin.ViewModels
         private void ReloadProducts(ProductChangedMessage message)
         {
             this.Products.Clear();
-            var products = this._serviceFactory.CreateClient<IInventoryService>().GetProducts();
-            foreach( var p in products)
-            {
-                this.Products.Add(p);
-            }
+            this.LoadProductsWithHardcodedEndpoint();
         }
 
         private void RegisterCommands()
@@ -139,6 +148,8 @@ namespace Demo.Admin.ViewModels
         {
             WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
             {
+                this.SetCredentials(inventoryClient);
+
                 var products = inventoryClient.GetProducts();
                 if (products != null && products.Length > 0)
                 {
@@ -148,6 +159,20 @@ namespace Demo.Admin.ViewModels
                     }
                 }
             });
+        }
+
+        private void SetCredentials(IInventoryService inventoryClient)
+        {
+            if (this._isTest) return;
+
+            // Remove the ClientCredentials behavior. 
+            var credentials = (inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+
+            // Add a custom client credentials instance to the behaviors collection. 
+            (inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
         }
 
         #endregion
@@ -176,6 +201,8 @@ namespace Demo.Admin.ViewModels
             {
                 WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
                 {
+                    this.SetCredentials(inventoryClient);
+
                     inventoryClient.DeleteProduct(product.ProductId);
                     product.IsActive = false;
                 });
@@ -196,6 +223,8 @@ namespace Demo.Admin.ViewModels
             {
                 WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
                 {
+                    this.SetCredentials(inventoryClient);
+
                     inventoryClient.ActivateProduct(product.ProductId);
                     product.IsActive = true;
                 });

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Business", "Business", "{9D5C8037-0E93-4908-88E7-1E668C6FC412}"
 EndProject
@@ -84,6 +84,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Admin.Client", "Demo.Admin.Client\Demo.Admin.Client.csproj", "{A69A833C-AC5B-4489-85CF-837BA41941F1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Admin.ViewModels", "Demo.Admin.ViewModels\Demo.Admin.ViewModels.csproj", "{1B829930-5585-4737-B932-849C4B10CD6E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security", "Security", "{22BADE8C-947E-4FB3-A9D6-AA88E97BE1A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo.Security", "Demo.Security\Demo.Security.csproj", "{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -219,6 +223,10 @@ Global
 		{1B829930-5585-4737-B932-849C4B10CD6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B829930-5585-4737-B932-849C4B10CD6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1B829930-5585-4737-B932-849C4B10CD6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -256,5 +264,6 @@ Global
 		{DC25ED89-B7E9-42ED-90EE-F8FB6294647E} = {FE03F86E-F8DF-46B2-AD10-D3A006F4B50E}
 		{A69A833C-AC5B-4489-85CF-837BA41941F1} = {017C8DFE-6A3F-4713-9681-7FB05271E88A}
 		{1B829930-5585-4737-B932-849C4B10CD6E} = {017C8DFE-6A3F-4713-9681-7FB05271E88A}
+		{B8814C1E-B475-40F9-A3C0-82C7F1DE2CF9} = {22BADE8C-947E-4FB3-A9D6-AA88E97BE1A2}
 	EndGlobalSection
 EndGlobal

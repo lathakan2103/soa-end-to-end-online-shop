@@ -44,10 +44,6 @@ namespace Demo.ServiceHost.Console
             timer.Elapsed += OnTimerElapsed;
             //timer.Start();
 
-            System.Console.WriteLine("ShoppingManager monitoring started.");
-
-            System.Console.WriteLine("");
-            System.Console.WriteLine("Start monitoring service calls");
             System.Console.WriteLine("-------------------------------------------------------------------------");
             System.Console.WriteLine("");
             System.Console.ReadKey();
@@ -112,18 +108,6 @@ namespace Demo.ServiceHost.Console
             }
 
             System.Console.WriteLine();
-        }
-
-        private static object GetParams(object[] parameter)
-        {
-            var output = string.Empty;
-
-            foreach (var p in parameter)
-            {
-                output += p.ToString() + " ";
-            }
-
-            return string.IsNullOrWhiteSpace(output) ? "n.A." : output;
         }
 
         /// <summary>
