@@ -113,6 +113,10 @@
       <Project>{8D236A26-8D80-44C5-AD20-97302AF77EA0}</Project>
       <Name>Core.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Demo.Business.Contracts\Demo.Business.Contracts.csproj">
+      <Project>{4F5354B7-3BE3-4317-B2E0-B39105AB1BD7}</Project>
+      <Name>Demo.Business.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Demo.Client.Contracts\Demo.Client.Contracts.csproj">
       <Project>{8FC4E9DA-8D51-4487-A2C7-15CFAA4B43F9}</Project>
       <Name>Demo.Client.Contracts</Name>
@@ -120,6 +124,10 @@
     <ProjectReference Include="..\Demo.Client.Entities\Demo.Client.Entities.csproj">
       <Project>{DEC45000-ED7F-4077-B5CB-FD5C444F0DF3}</Project>
       <Name>Demo.Client.Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Demo.Client.Proxies\Demo.Client.Proxies.csproj">
+      <Project>{E53FDC12-224F-4458-9662-6B082889C261}</Project>
+      <Name>Demo.Client.Proxies</Name>
     </ProjectReference>
     <ProjectReference Include="..\Demo.Common\Demo.Common.csproj">
       <Project>{A949A4F8-55D3-4E99-9530-B732D23026BF}</Project>

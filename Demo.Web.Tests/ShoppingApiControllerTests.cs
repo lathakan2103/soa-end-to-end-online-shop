@@ -42,7 +42,8 @@ namespace Demo.Web.Tests
                 new ShoppingApiController(
                     this._shoppingService.Object,
                     this._inventoryService.Object,
-                    this._customerService.Object);
+                    this._customerService.Object,
+                    true);
         }
 
         [TestMethod]

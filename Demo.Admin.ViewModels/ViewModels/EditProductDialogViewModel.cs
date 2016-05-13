@@ -196,9 +196,7 @@ namespace Demo.Admin.ViewModels
                 }
 
                 this.OkCommand.Execute(null);
-            });
-
-            
+            });            
         }
 
         #endregion        

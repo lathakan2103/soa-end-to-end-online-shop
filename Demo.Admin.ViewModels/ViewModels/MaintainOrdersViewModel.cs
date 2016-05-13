@@ -90,7 +90,7 @@ namespace Demo.Admin.ViewModels
             {
                 this.SetCredentials(proxy);
 
-                var carts = shoppingClient.GetCarts();
+                var carts = proxy.GetCarts();
                 if (carts != null)
                 {
                     foreach (var c in carts)
@@ -138,8 +138,8 @@ namespace Demo.Admin.ViewModels
                 {
                     this.SetCredentials(proxy);
 
-                    shoppingClient.SetCartAsApproved(cart.CartId);
-                    cart.Approved = shoppingClient.GetCartByCartId(cart.CartId).Approved;
+                    proxy.SetCartAsApproved(cart.CartId);
+                    cart.Approved = proxy.GetCartByCartId(cart.CartId).Approved;
                 });
             }
             catch (FaultException ex)
@@ -161,8 +161,8 @@ namespace Demo.Admin.ViewModels
                 {
                     this.SetCredentials(proxy);
 
-                    shoppingClient.SetCartAsShipped(cart.CartId);
-                    cart.Shipped = shoppingClient.GetCartByCartId(cart.CartId).Shipped;
+                    proxy.SetCartAsShipped(cart.CartId);
+                    cart.Shipped = proxy.GetCartByCartId(cart.CartId).Shipped;
                 });
             }
             catch (FaultException ex)

@@ -146,11 +146,12 @@ namespace Demo.Admin.ViewModels
 
         private void LoadProductsWithHardcodedEndpoint()
         {
-            WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
+            var proxy = this._serviceFactory.CreateClient<IInventoryService>();
+            WithClient(proxy, inventoryClient =>
             {
-                this.SetCredentials(inventoryClient);
+                this.SetCredentials(proxy);
 
-                var products = inventoryClient.GetProducts();
+                var products = proxy.GetProducts();
                 if (products != null && products.Length > 0)
                 {
                     foreach (var p in products)
@@ -199,11 +200,12 @@ namespace Demo.Admin.ViewModels
         {
             try
             {
-                WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
+                var proxy = this._serviceFactory.CreateClient<IInventoryService>();
+                WithClient(proxy, inventoryClient =>
                 {
-                    this.SetCredentials(inventoryClient);
+                    this.SetCredentials(proxy);
 
-                    inventoryClient.DeleteProduct(product.ProductId);
+                    proxy.DeleteProduct(product.ProductId);
                     product.IsActive = false;
                 });
             }
@@ -221,11 +223,12 @@ namespace Demo.Admin.ViewModels
         {
             try
             {
-                WithClient(this._serviceFactory.CreateClient<IInventoryService>(), inventoryClient =>
+                var proxy = this._serviceFactory.CreateClient<IInventoryService>();
+                WithClient(proxy, inventoryClient =>
                 {
-                    this.SetCredentials(inventoryClient);
+                    this.SetCredentials(proxy);
 
-                    inventoryClient.ActivateProduct(product.ProductId);
+                    proxy.ActivateProduct(product.ProductId);
                     product.IsActive = true;
                 });
             }

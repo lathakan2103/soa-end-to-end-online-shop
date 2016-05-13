@@ -14,8 +14,15 @@ namespace Demo.Client.Proxies.Service_Procies
     {
         public CustomerShoppingHistoryInfo GetShoppingHistory(string loginEmail)
         {
-            var result = Channel.GetShoppingHistory(loginEmail);
-            return result;
+            try
+            {
+                var result = Channel.GetShoppingHistory(loginEmail);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Cart GetCartByCartId(int cartId)

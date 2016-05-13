@@ -8,6 +8,9 @@ using System.Web.Http;
 using Core.Common.Contracts;
 using Demo.Client.Contracts;
 using Demo.Client.Entities;
+using Demo.Client.Proxies;
+using System.ServiceModel.Description;
+using Demo.Client.Proxies.Service_Procies;
 
 namespace Demo.Web.Controllers.Api
 {
@@ -20,9 +23,10 @@ namespace Demo.Web.Controllers.Api
     {
         #region Fields
 
-        private readonly IShoppingService _shoppingService;
-        private readonly IInventoryService _inventoryService;
-        private readonly ICustomerService _customerService;
+        private readonly IShoppingService _shoppingClient;
+        private readonly IInventoryService _inventoryClient;
+        private readonly ICustomerService _customerClient;
+        private bool _isTest = false;
 
         #endregion
 
@@ -30,13 +34,26 @@ namespace Demo.Web.Controllers.Api
 
         [ImportingConstructor]
         public ShoppingApiController(
-            IShoppingService shoppingService,
-            IInventoryService inventoryService, 
-            ICustomerService customerService)
+            IShoppingService shoppingClient,
+            IInventoryService inventoryClient,
+            ICustomerService customerClient)
         {
-            this._shoppingService = shoppingService;
-            this._inventoryService = inventoryService;
-            this._customerService = customerService;
+            this._shoppingClient = shoppingClient;
+            this._inventoryClient = inventoryClient;
+            this._customerClient = customerClient;
+        }
+
+        public ShoppingApiController(
+            IShoppingService shoppingClient,
+            IInventoryService inventoryClient,
+            ICustomerService customerClient,
+            bool isTest)
+        {
+            this._shoppingClient = shoppingClient;
+            this._inventoryClient = inventoryClient;
+            this._customerClient = customerClient;
+
+            this._isTest = isTest;
         }
 
         #endregion
@@ -45,9 +62,8 @@ namespace Demo.Web.Controllers.Api
 
         protected override void RegisterServices(List<IServiceContract> disposableServices)
         {
-            disposableServices.Add(this._shoppingService);
-            disposableServices.Add(this._inventoryService);
-            disposableServices.Add(this._customerService);
+            disposableServices.Add(this._shoppingClient);
+            disposableServices.Add(this._inventoryClient);
         }
 
         #endregion
@@ -60,7 +76,8 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var products = this._inventoryService.GetActiveProducts().ToArray();
+                this.SetInventoryCredentials();
+                var products = this._inventoryClient.GetActiveProducts().ToArray();
                 return request.CreateResponse(HttpStatusCode.OK, products);
             });
         }
@@ -71,7 +88,8 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var product = this._inventoryService.GetProductById(productId);
+                this.SetInventoryCredentials();
+                var product = this._inventoryClient.GetProductById(productId);
                 return request.CreateResponse(HttpStatusCode.OK, product);
             });
         }
@@ -82,8 +100,8 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var history = this._shoppingService.GetShoppingHistory(User.Identity.Name);
-
+                this.SetShoppingCredentials();
+                var history = this._shoppingClient.GetShoppingHistory(User.Identity.Name);
                 return request.CreateResponse(HttpStatusCode.OK, history);
             });
         }
@@ -94,8 +112,8 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var cart = this._shoppingService.GetCartItemsByCartId(cartId);
-
+                this.SetShoppingCredentials();
+                var cart = this._shoppingClient.GetCartItemsByCartId(cartId);
                 return request.CreateResponse(HttpStatusCode.OK, cart);
             });
         }
@@ -110,13 +128,17 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var product = this._inventoryService.GetProductById(productId);
-                var id = this._customerService.GetCustomerByLogin(User.Identity.Name).CustomerId;
+                this.SetCustomerCredentials();
+                this.SetInventoryCredentials();
+                this.SetShoppingCredentials();
 
-                var cart = this._shoppingService.GetActiveCart(id);
+                var product = this._inventoryClient.GetProductById(productId);
+                var id = this._customerClient.GetCustomerByLogin(User.Identity.Name).CustomerId;
+
+                var cart = this._shoppingClient.GetActiveCart(id);
                 if (cart == null)
                 {
-                    cart = this._shoppingService.AddCart(
+                    cart = this._shoppingClient.AddCart(
                          new Cart
                          {
                              CustomerId = id,
@@ -126,7 +148,7 @@ namespace Demo.Web.Controllers.Api
                          });
                 }
 
-                this._shoppingService.AddCartItemToCart(
+                this._shoppingClient.AddCartItemToCart(
                     cart.CartId, 
                     new CartItem
                     {
@@ -145,10 +167,12 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var cart = this._shoppingService.GetCartByCartId(cartId);
+                this.SetShoppingCredentials();
+
+                var cart = this._shoppingClient.GetCartByCartId(cartId);
                 if (cart != null)
                 {
-                    this._shoppingService.SetCartAsCanceled(cartId);
+                    this._shoppingClient.SetCartAsCanceled(cartId);
                     return request.CreateResponse(HttpStatusCode.OK);
                 }
 
@@ -162,18 +186,55 @@ namespace Demo.Web.Controllers.Api
         {
             return GetHttpResponseMessage(request, () =>
             {
-                var id = this._customerService.GetCustomerByLogin(User.Identity.Name).CustomerId;
-                var cart = this._shoppingService.GetActiveCart(id);
+                this.SetShoppingCredentials();
+                this.SetCustomerCredentials();
+
+                var id = this._customerClient.GetCustomerByLogin(User.Identity.Name).CustomerId;
+                var cart = this._shoppingClient.GetActiveCart(id);
 
                 if (cart == null)
                 {
                     return request.CreateResponse(HttpStatusCode.NotFound);
                 }
 
-                this._shoppingService.CloseCart(cart.CartId);
+                this._shoppingClient.CloseCart(cart.CartId);
 
                 return request.CreateResponse(HttpStatusCode.OK);
             });
+        }
+
+        #endregion
+
+        #region Helpers
+
+        private void SetShoppingCredentials()
+        {
+            if (this._isTest) return;
+
+            var credentials = (this._shoppingClient as ShoppingClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+            (this._shoppingClient as ShoppingClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
+        }
+
+        private void SetInventoryCredentials()
+        {
+            if (this._isTest) return;
+
+            var credentials = (this._inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+            (this._inventoryClient as InventoryClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
+        }
+
+        private void SetCustomerCredentials()
+        {
+            if (this._isTest) return;
+
+            var credentials = (this._customerClient as CustomerClient).ChannelFactory.Endpoint.Behaviors.Remove<ClientCredentials>();
+            credentials.UserName.UserName = "pingo";
+            credentials.UserName.Password = "07061971";
+            (this._customerClient as CustomerClient).ChannelFactory.Endpoint.Behaviors.Add(credentials);
         }
 
         #endregion
