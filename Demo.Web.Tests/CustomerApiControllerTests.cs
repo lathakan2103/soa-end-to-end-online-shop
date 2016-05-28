@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Principal;
 using System.Net.Http;
@@ -8,6 +10,7 @@ using Moq;
 using Demo.Client.Contracts;
 using Demo.Client.Entities;
 using Demo.Web.Controllers.Api;
+using MyTested.WebApi;
 
 namespace Demo.Web.Tests
 {
@@ -16,55 +19,69 @@ namespace Demo.Web.Tests
     {
         #region Fields
 
-        private HttpRequestMessage _Request = null;
+        private HttpRequestMessage _request;
         private Mock<ICustomerService> _customerService;
-        private CustomerApiController _controller;
+        private Customer _customer = new Customer
+        {
+            LoginEmail = "test@test.com",
+            ExpirationDate = "12/18",
+            State = "NY",
+            ZipCode = "11010"
+        };
 
         #endregion
 
         [TestInitialize]
         public void Initializer()
         {
-            this._Request = GetRequest();
+            this._request = GetRequest();
 
             // security because of ValidateAuthorizedUser!!!
             var principal = new GenericPrincipal(new GenericIdentity("test@test.com"), new[] { "Administrators" });
             Thread.CurrentPrincipal = principal;
 
             this._customerService = new Mock<ICustomerService>();
-            this._controller = new CustomerApiController(this._customerService.Object);
         }
 
         [TestMethod]
         public void test_get_customer_account_info()
         {
-            var customer = new Customer { LoginEmail = "test@test.com", ExpirationDate = "1218" };
+            this._customerService.Setup(obj => obj.GetCustomerByLogin(this._customer.LoginEmail)).Returns(this._customer);
 
-            this._customerService.Setup(obj => obj.GetCustomerByLogin("test@test.com")).Returns(customer);
-            var response = this._controller.GetCustomerAccountInfo(this._Request);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            var data = GetResponseData<Customer>(response);
-
-            Assert.IsTrue(data == customer);
+            MyWebApi
+                    .Controller<CustomerApiController>()
+                    .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                    .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
+                    .Calling(c => c.GetCustomerAccountInfo(this._request))
+                    .ShouldHave()
+                    .ValidModelState()
+                    .AndAlso()
+                    .ShouldReturn()
+                    .HttpResponseMessage()
+                    .WithStatusCode(HttpStatusCode.OK)
+                    .WithResponseModelOfType<Customer>()
+                    .Passing(m =>
+                    {
+                        Assert.AreSame(m, this._customer);
+                    });
         }
 
         [TestMethod]
         public void test_update_customer_account_info()
         {
-            var customer = new Customer
-            {
-                LoginEmail = "test@test.com",
-                ExpirationDate = "12/18",
-                State = "NY",
-                ZipCode = "11010"
-            };
+            this._customerService.Setup(obj => obj.UpdateCustomer(this._customer)).Verifiable();
 
-            this._customerService.Setup(obj => obj.UpdateCustomer(customer));
-            var response = this._controller.UpdateCustomerAccountInfo(this._Request, customer);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
+            MyWebApi
+                .Controller<CustomerApiController>()
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
+                .Calling(c => c.UpdateCustomerAccountInfo(this._request, this._customer))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK);
         }
 
         #region Helpers

@@ -1,48 +1,46 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Demo.Web.Contracts;
 using Moq;
 using Demo.Web.Controllers.Mvc;
-using System.Web.Mvc;
 using Demo.Web.Models;
+using TestStack.FluentMVCTesting;
 
 namespace Demo.Web.Tests
 {
     [TestClass]
     public class AccountControllerTests
     {
+        #region Field
+
+        private Mock<ISecurityAdapter> _securityAdapter;
+        private AccountController _controller;
+        private const string ReturnUrl = "/testreturnurl";
+
+        #endregion
+
+        [TestInitialize]
+        public void TestInitializer()
+        {
+            this._securityAdapter = new Mock<ISecurityAdapter>();
+            this._securityAdapter.Setup(obj => obj.Initialize());
+            this._controller = new AccountController(this._securityAdapter.Object);
+        }
+
         [TestMethod]
         public void test_login()
         {
-            var securityAdapter = new Mock<ISecurityAdapter>();
-            securityAdapter.Setup(obj => obj.Initialize());
-
-            string returnUrl = "/testreturnurl";
-
-            var accountController = new AccountController(securityAdapter.Object);
-            var actionResult = accountController.Login(returnUrl);
-
-            Assert.IsTrue(actionResult is ViewResult);
-
-            var viewResult = actionResult as ViewResult;
-
-            Assert.IsTrue(viewResult.Model is AccountLoginModel);
-
-            var model = viewResult.Model as AccountLoginModel;
-
-            Assert.IsTrue(model.ReturnUrl == returnUrl);
+            this._controller
+                .WithCallTo(x => x.Login(ReturnUrl))
+                .ShouldRenderDefaultView() // Login View
+                .WithModel<AccountLoginModel>(m => m.ReturnUrl.Equals(ReturnUrl));
         }
 
         [TestMethod]
         public void test_register()
         {
-            var securityAdapter = new Mock<ISecurityAdapter>();
-            securityAdapter.Setup(obj => obj.Initialize());
-
-            var accountController = new AccountController(securityAdapter.Object);
-            var actionResult = accountController.Register();
-
-            Assert.IsTrue(actionResult is ViewResult);
+            this._controller
+                .WithCallTo(c => c.Register())
+                .ShouldRenderDefaultView(); // Register View
         }
     }
 }

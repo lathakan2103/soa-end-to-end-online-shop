@@ -13,7 +13,11 @@ namespace Demo.Web.Tests
     [TestClass]
     public class AccountApiControllerTests
     {
-        private HttpRequestMessage _Request = null;
+        #region Fields
+
+        private HttpRequestMessage _Request;
+
+        #endregion
 
         [TestInitialize]
         public void Initializer()
