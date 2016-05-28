@@ -7,8 +7,10 @@ using System.Security.Principal;
 using Demo.Client.Contracts;
 using Moq;
 using System.Collections.Generic;
+using System.Net;
 using Demo.Client.Entities;
 using Demo.Web.Controllers.Api;
+using MyTested.WebApi;
 
 namespace Demo.Web.Tests
 {
@@ -17,18 +19,17 @@ namespace Demo.Web.Tests
     {
         #region Fields
 
-        private HttpRequestMessage _Request = null;
+        private HttpRequestMessage _request;
         private Mock<IShoppingService> _shoppingService;
         private Mock<IInventoryService> _inventoryService;
         private Mock<ICustomerService> _customerService;
-        private ShoppingApiController _controller;
 
         #endregion
 
         [TestInitialize]
         public void Initializer()
         {
-            this._Request = GetRequest();
+            this._request = GetRequest();
 
             // security because of ValidateAuthorizedUser!!!
             var principal = new GenericPrincipal(new GenericIdentity("test@test.com"), new[] { "Administrators" });
@@ -37,13 +38,6 @@ namespace Demo.Web.Tests
             this._shoppingService = new Mock<IShoppingService>();
             this._inventoryService = new Mock<IInventoryService>();
             this._customerService = new Mock<ICustomerService>();
-
-            this._controller =
-                new ShoppingApiController(
-                    this._shoppingService.Object,
-                    this._inventoryService.Object,
-                    this._customerService.Object,
-                    true);
         }
 
         [TestMethod]
@@ -57,14 +51,23 @@ namespace Demo.Web.Tests
 
             this._inventoryService.Setup(obj => obj.GetActiveProducts()).Returns(products);
 
-            var response = this._controller.GetActiveProducts(this._Request);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            var data = this.GetResponseData<Product[]>(response);
-
-            Assert.IsTrue(data[0] == products[0]);
-            Assert.IsTrue(data[1] == products[1]);
+            MyWebApi
+                .Controller<ShoppingApiController>()
+                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
+                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor<bool>(true)
+                .Calling(c => c.GetActiveProducts(this._request))
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK)
+                .AndAlso()
+                .WithResponseModelOfType<Product[]>()
+                .Passing(m =>
+                {
+                    Assert.IsTrue(m[0] == products[0]);
+                    Assert.IsTrue(m[1] == products[1]);
+                });
         }
 
         [TestMethod]
@@ -81,13 +84,22 @@ namespace Demo.Web.Tests
 
             this._inventoryService.Setup(obj => obj.GetProductById(1, false)).Returns(product);
 
-            var response = this._controller.GetProduct(this._Request, 1);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            var data = this.GetResponseData<Product>(response);
-
-            Assert.IsTrue(data == product);
+            MyWebApi
+                .Controller<ShoppingApiController>()
+                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
+                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor<bool>(true)
+                .Calling(c => c.GetProduct(this._request, 1))
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK)
+                .AndAlso()
+                .WithResponseModelOfType<Product>()
+                .Passing(m =>
+                {
+                    Assert.IsTrue(m == product);
+                });
         }
 
         [TestMethod]
@@ -149,13 +161,24 @@ namespace Demo.Web.Tests
             };
 
             this._shoppingService.Setup(obj => obj.GetShoppingHistory("test@test.com")).Returns(history);
-            var response = this._controller.GetShoppingHistory(this._Request);
 
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            var data = this.GetResponseData<CustomerShoppingHistoryInfo>(response);
-
-            Assert.IsTrue(data == history);
+            MyWebApi
+                .Controller<ShoppingApiController>()
+                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
+                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor<bool>(true)
+                .WithAuthenticatedUser(u => u.WithUsername("test@test.com"))
+                .Calling(c => c.GetShoppingHistory(this._request))
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK)
+                .AndAlso()
+                .WithResponseModelOfType<CustomerShoppingHistoryInfo>()
+                .Passing(m =>
+                {
+                    Assert.IsTrue(m == history);
+                });
         }
 
         [TestMethod]
@@ -170,13 +193,23 @@ namespace Demo.Web.Tests
             };
 
             this._shoppingService.Setup(obj => obj.GetCartItemsByCartId(1)).Returns(items);
-            var response = this._controller.GetCartItemsByCartId(this._Request, 1);
 
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            var data = this.GetResponseData<IEnumerable<CartItemInfo>>(response);
-
-            Assert.IsTrue(data == items);
+            MyWebApi
+                .Controller<ShoppingApiController>()
+                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
+                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor<bool>(true)
+                .Calling(c => c.GetCartItemsByCartId(this._request, 1))
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK)
+                .AndAlso()
+                .WithResponseModelOfType<IEnumerable<CartItemInfo>>()
+                .Passing(m =>
+                {
+                    Assert.IsTrue(m == items);
+                });
         }
 
         [TestMethod]
@@ -206,11 +239,16 @@ namespace Demo.Web.Tests
             this._shoppingService.Setup(obj => obj.GetCartByCartId(1)).Returns(cart);
             this._shoppingService.Setup(obj => obj.SetCartAsCanceled(1)).Verifiable();
 
-            var response = this._controller.CancelCart(this._Request, 1);
-
-            this._shoppingService.VerifyAll();
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
+            MyWebApi
+                .Controller<ShoppingApiController>()
+                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
+                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor<bool>(true)
+                .Calling(c => c.CancelCart(this._request, 1))
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK);
         }
 
         #region Helpers
