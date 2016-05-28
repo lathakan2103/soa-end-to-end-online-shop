@@ -46,24 +46,24 @@ namespace Demo.Web.Tests
         [TestMethod]
         public void test_get_customer_account_info()
         {
-            this._customerService.Setup(obj => obj.GetCustomerByLogin(this._customer.LoginEmail)).Returns(this._customer);
+            this._customerService.Setup(obj => obj.GetCustomerByLogin("test@test.com")).Returns(this._customer);
 
             MyWebApi
-                    .Controller<CustomerApiController>()
-                    .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                    .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
-                    .Calling(c => c.GetCustomerAccountInfo(this._request))
-                    .ShouldHave()
-                    .ValidModelState()
-                    .AndAlso()
-                    .ShouldReturn()
-                    .HttpResponseMessage()
-                    .WithStatusCode(HttpStatusCode.OK)
-                    .WithResponseModelOfType<Customer>()
-                    .Passing(m =>
-                    {
-                        Assert.AreSame(m, this._customer);
-                    });
+                .Controller<CustomerApiController>()
+                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
+                .Calling(c => c.GetCustomerAccountInfo(this._request))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK)
+                .WithResponseModelOfType<Customer>()
+                .Passing(m =>
+                {
+                    Assert.AreSame(m, this._customer);
+                });
         }
 
         [TestMethod]

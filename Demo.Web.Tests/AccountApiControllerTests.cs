@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Net;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Net.Http;
 using System.Web.Http;
 using Moq;
@@ -7,6 +8,8 @@ using Demo.Web.Controllers.Api;
 using Demo.Web.Models;
 using System.Security.Principal;
 using System.Threading;
+using Demo.Client.Entities;
+using MyTested.WebApi;
 
 namespace Demo.Web.Tests
 {
@@ -15,95 +18,152 @@ namespace Demo.Web.Tests
     {
         #region Fields
 
-        private HttpRequestMessage _Request;
+        private HttpRequestMessage _request;
+        private Mock<ISecurityAdapter> _securityAdapter;
+        private readonly AccountLoginModel _loginModel = new AccountLoginModel
+        {
+            ReturnUrl = "",
+            LoginEmail = "test@test.com",
+            Password = "07061971",
+            RememberMe = false
+        };
+        private readonly AccountChangePasswordModel _changePasswordModel = new AccountChangePasswordModel
+        {
+            LoginEmail = "test@test.com",
+            OldPassword = "07061971",
+            NewPassword = "123456"
+        };
+        private readonly AccountRegisterModel _registerModel = new AccountRegisterModel
+        {
+            FirstName = "Aleksandar",
+            LastName = "Ristic",
+            Age = 44,
+            City = "Vienna",
+            CreditCard = "1234123412341234",
+            ExpirationDate = "12/18",
+            Hausnumber = "56",
+            IsActive = true,
+            LoginEmail = "test@test.com",
+            Password = "07061971",
+            State = "NY",
+            Street = "Mainstreet",
+            ZipCode = "11010"
+        };
 
         #endregion
 
         [TestInitialize]
         public void Initializer()
         {
-            this._Request = GetRequest();
+            this._request = GetRequest();
 
             // security because of ValidateAuthorizedUser!!!
             var principal = new GenericPrincipal(new GenericIdentity("test@test.com"), new[] { "Administrators" });
             Thread.CurrentPrincipal = principal;
+
+            this._securityAdapter = new Mock<ISecurityAdapter>();
         }
 
         [TestMethod]
-        public void test_login()
+        public void test_login_with_valid_login_email_address()
         {
-            var accountLoginModel = new AccountLoginModel
-            {
-                LoginEmail = "test@test.com",
-                Password = "07061971",
-                RememberMe = false
-            };            
+            this._securityAdapter.Setup(obj => obj.Login(this._loginModel.LoginEmail, this._loginModel.Password, false)).Returns(true);
 
-            var securityAdapter = new Mock<ISecurityAdapter>();
-            securityAdapter.Setup(obj => obj.Login("test@test.com", "07061971", false)).Returns(true);
-
-            var controller = new AccountApiController(securityAdapter.Object);
-            var response = controller.Login(this._Request, accountLoginModel);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            accountLoginModel.LoginEmail = "xxx@test.com";
-            response = controller.Login(this._Request, accountLoginModel);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .Calling(c => c.Login(this._request, this._loginModel))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK);
         }
 
         [TestMethod]
-        public void test_change_password()
+        public void test_login_with_invalid_login_email_address()
         {
-            var model = new AccountChangePasswordModel
-            {
-                LoginEmail = "test@test.com",
-                OldPassword = "07061971",
-                NewPassword = "123456"
-            };
+            this._securityAdapter.Setup(obj => obj.Login("some@other.email", this._loginModel.Password, false)).Returns(false);
 
-            var securityAdapter = new Mock<ISecurityAdapter>();
-            securityAdapter.Setup(obj => obj.ChangePassword("test@test.com", "07061971", "123456")).Returns(true);
-
-            var controller = new AccountApiController(securityAdapter.Object);
-            var response = controller.ChangePassword(this._Request, model);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
-
-            model.LoginEmail = "1111111";
-            response = controller.ChangePassword(this._Request, model);
-
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .Calling(c => c.Login(this._request, this._loginModel))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.Unauthorized);
         }
 
         [TestMethod]
-        public void test_create_account()
+        public void test_change_password_with_valid_credentials()
         {
-            var model = new AccountRegisterModel
-            {
-                FirstName = "Aleksandar",
-                LastName = "Ristic",
-                Age = 44,
-                City = "Vienna",
-                CreditCard = "1234123412341234",
-                ExpirationDate = "12/18",
-                Hausnumber = "56",
-                IsActive = true,
-                LoginEmail = "test@test.com",
-                Password = "07061971",
-                State = "NY",
-                Street = "Mainstreet",
-                ZipCode = "11010" 
-            };
+            this._securityAdapter.Setup(obj => obj.ChangePassword("test@test.com", "07061971", "123456")).Returns(true);
 
-            var securityAdapter = new Mock<ISecurityAdapter>();
-            securityAdapter.Setup(obj => obj.Login("test@test.com", "07061971", false)).Returns(true);
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
+                .Calling(c => c.ChangePassword(this._request, this._changePasswordModel))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK);
+        }
 
-            var controller = new AccountApiController(securityAdapter.Object);
-            var response = controller.CreateAccount(this._Request, model);
+        [TestMethod]
+        public void test_change_password_with_invalid_credentials()
+        {
+            this._changePasswordModel.LoginEmail = "some@other.email";
+            this._securityAdapter.Setup(obj => obj.ChangePassword("test@test.com", "07061971", "123456")).Returns(true);
 
-            Assert.IsTrue(response.StatusCode == System.Net.HttpStatusCode.OK);
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
+                .Calling(c => c.ChangePassword(this._request, this._changePasswordModel))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.InternalServerError);
+        }
+
+        [TestMethod]
+        public void test_create_account_with_valid_model()
+        {
+            this._securityAdapter.Setup(obj => obj.Login("test@test.com", "07061971", false)).Returns(true);
+
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
+                .Calling(c => c.CreateAccount(this._request, this._registerModel))
+                .ShouldHave()
+                .ValidModelState()
+                .AndAlso()
+                .ShouldReturn()
+                .HttpResponseMessage()
+                .WithStatusCode(HttpStatusCode.OK);
+        }
+
+        [TestMethod]
+        public void test_create_account_with_invalid_model()
+        {
+            this._registerModel.FirstName = "F";
+
+            MyWebApi
+                .Controller<AccountApiController>()
+                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .Calling(c => c.CreateAccount(this._request, this._registerModel))
+                .ShouldReturn()
+                .Null();
         }
 
         #region Helpers
