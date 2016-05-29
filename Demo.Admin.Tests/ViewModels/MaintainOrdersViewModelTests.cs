@@ -43,7 +43,7 @@ namespace Demo.Admin.Tests.ViewModels
                 CartId = 1
             };
 
-            var approvedCart = new Cart
+            var shippedCart = new Cart
             {
                 CartId = 1,
                 Shipped = DateTime.Today
@@ -51,7 +51,7 @@ namespace Demo.Admin.Tests.ViewModels
 
             var serviceFactory = new Mock<IServiceFactory>();
             serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().SetCartAsShipped(1)).Verifiable();
-            serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().GetCartByCartId(1)).Returns(approvedCart);
+            serviceFactory.Setup(obj => obj.CreateClient<IShoppingService>().GetCartByCartId(1)).Returns(shippedCart);
 
             var vm = new MaintainOrdersViewModel(serviceFactory.Object, true);
             vm.ShippOrderCommand.Execute(cart);
