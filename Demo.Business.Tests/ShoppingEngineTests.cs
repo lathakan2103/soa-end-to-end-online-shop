@@ -5,7 +5,6 @@ using Moq;
 using Demo.Business.Entities;
 using Demo.Data.Contracts.Dto;
 using System.Collections.Generic;
-using Demo.Business.Contracts;
 using System;
 
 namespace Demo.Business.Tests
@@ -72,10 +71,10 @@ namespace Demo.Business.Tests
             };
 
             var mockCartRepository = new Mock<ICartRepository>();
-            mockCartRepository.Setup(Obj => Obj.GetCustomerShoppingHistory(1)).Returns(history);
+            mockCartRepository.Setup(obj => obj.GetCustomerShoppingHistory(1)).Returns(history);
 
             var shoppingEngine = new ShoppingEngine();
-            var result = shoppingEngine.GetShoppingHistoryInfo(1, mockCartRepository.Object) as CustomerShoppingHistoryInfo;
+            var result = shoppingEngine.GetShoppingHistoryInfo(1, mockCartRepository.Object);
 
             Assert.IsTrue(result != null);
             Assert.IsTrue(result.CartList.Length == 2);
@@ -97,6 +96,7 @@ namespace Demo.Business.Tests
 
             Assert.AreEqual(customer, result);
         }
+
         [TestMethod]
         public void test_closing_cart()
         {

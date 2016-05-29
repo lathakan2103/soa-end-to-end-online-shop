@@ -8,7 +8,6 @@ using Demo.Web.Controllers.Api;
 using Demo.Web.Models;
 using System.Security.Principal;
 using System.Threading;
-using Demo.Client.Entities;
 using MyTested.WebApi;
 
 namespace Demo.Web.Tests
@@ -71,7 +70,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .Calling(c => c.Login(this._request, this._loginModel))
                 .ShouldHave()
                 .ValidModelState()
@@ -88,7 +87,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .Calling(c => c.Login(this._request, this._loginModel))
                 .ShouldHave()
                 .ValidModelState()
@@ -105,7 +104,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
                 .Calling(c => c.ChangePassword(this._request, this._changePasswordModel))
                 .ShouldHave()
@@ -124,7 +123,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
                 .Calling(c => c.ChangePassword(this._request, this._changePasswordModel))
                 .ShouldHave()
@@ -142,7 +141,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .WithAuthenticatedUser(u => u.WithUsername(this._changePasswordModel.LoginEmail))
                 .Calling(c => c.CreateAccount(this._request, this._registerModel))
                 .ShouldHave()
@@ -160,7 +159,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<AccountApiController>()
-                .WithResolvedDependencyFor<ISecurityAdapter>(this._securityAdapter.Object)
+                .WithResolvedDependencyFor(this._securityAdapter.Object)
                 .Calling(c => c.CreateAccount(this._request, this._registerModel))
                 .ShouldReturn()
                 .Null();
@@ -174,20 +173,6 @@ namespace Demo.Web.Tests
             var request = new HttpRequestMessage();
             request.Properties["MS_HttpConfiguration"] = config;
             return request;
-        }
-
-        T GetResponseData<T>(HttpResponseMessage result)
-        {
-            var content = result.Content as ObjectContent<T>;
-            if (content != null)
-            {
-                T data = (T)(content.Value);
-                return data;
-            }
-            else
-            {
-                return default(T);
-            }
         }
 
         #endregion

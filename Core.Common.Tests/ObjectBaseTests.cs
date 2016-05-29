@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Core.Common.Tests
 {
     /// <summary>
-    /// this is the test class for uóur core functionalities
+    /// this is the test class for uur core functionalities
     /// </summary>
     [TestClass]
     public class ObjectBaseTests
@@ -25,7 +25,7 @@ namespace Core.Common.Tests
             objTest.CleanProp = "test value";
 
             // todo: assert
-            Assert.IsTrue(propertyChanged, "Changing CleanProp should have set the notiication flag to true.");
+            Assert.IsTrue(propertyChanged, "Changing CleanProp should have set the notification flag to true.");
         }
 
         [TestMethod]

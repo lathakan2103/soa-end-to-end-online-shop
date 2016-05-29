@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Net;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Security.Principal;
 using System.Net.Http;
@@ -21,7 +19,7 @@ namespace Demo.Web.Tests
 
         private HttpRequestMessage _request;
         private Mock<ICustomerService> _customerService;
-        private Customer _customer = new Customer
+        private readonly Customer _customer = new Customer
         {
             LoginEmail = "test@test.com",
             ExpirationDate = "12/18",
@@ -50,7 +48,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<CustomerApiController>()
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
                 .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
                 .Calling(c => c.GetCustomerAccountInfo(this._request))
                 .ShouldHave()
@@ -73,7 +71,7 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<CustomerApiController>()
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
                 .WithAuthenticatedUser(u => u.WithUsername(this._customer.LoginEmail))
                 .Calling(c => c.UpdateCustomerAccountInfo(this._request, this._customer))
                 .ShouldHave()
@@ -92,20 +90,6 @@ namespace Demo.Web.Tests
             var request = new HttpRequestMessage();
             request.Properties["MS_HttpConfiguration"] = config;
             return request;
-        }
-
-        T GetResponseData<T>(HttpResponseMessage result)
-        {
-            var content = result.Content as ObjectContent<T>;
-            if (content != null)
-            {
-                T data = (T)(content.Value);
-                return data;
-            }
-            else
-            {
-                return default(T);
-            }
         }
 
         #endregion

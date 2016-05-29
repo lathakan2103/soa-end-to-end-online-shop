@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Core.Common.Contracts;
 using Demo.Client.Contracts;
@@ -44,7 +43,7 @@ namespace Demo.Admin.Tests.ViewModels
             var vm = new MaintainProductsViewModel(serviceFactory.Object);
             vm.ActivateProductCommand.Execute(product);
 
-            Assert.IsTrue(product.IsActive == true);
+            Assert.IsTrue(product.IsActive);
         }
     }
 }

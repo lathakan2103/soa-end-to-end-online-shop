@@ -43,7 +43,7 @@ namespace Demo.Web.Tests
         [TestMethod]
         public void test_get_active_products()
         {
-            var products = new Product[]
+            var products = new[]
             {
                 new Product { ProductId = 1, Name = "Test product 1", Description = "---", Price = 100, IsActive = true },
                 new Product { ProductId = 2, Name = "Test product 2", Description = "---", Price = 200, IsActive = true }
@@ -53,10 +53,10 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<ShoppingApiController>()
-                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
-                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                .WithResolvedDependencyFor<bool>(true)
+                .WithResolvedDependencyFor(this._shoppingService.Object)
+                .WithResolvedDependencyFor(this._inventoryService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
+                .WithResolvedDependencyFor(true)
                 .Calling(c => c.GetActiveProducts(this._request))
                 .ShouldReturn()
                 .HttpResponseMessage()
@@ -86,10 +86,10 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<ShoppingApiController>()
-                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
-                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                .WithResolvedDependencyFor<bool>(true)
+                .WithResolvedDependencyFor(this._shoppingService.Object)
+                .WithResolvedDependencyFor(this._inventoryService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
+                .WithResolvedDependencyFor(true)
                 .Calling(c => c.GetProduct(this._request, 1))
                 .ShouldReturn()
                 .HttpResponseMessage()
@@ -112,7 +112,7 @@ namespace Demo.Web.Tests
             var history = new CustomerShoppingHistoryInfo
             {
                 Customer = customer,
-                CartList = new CartInfo[]
+                CartList = new []
                     {
                         new CartInfo
                         {
@@ -164,10 +164,10 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<ShoppingApiController>()
-                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
-                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                .WithResolvedDependencyFor<bool>(true)
+                .WithResolvedDependencyFor(this._shoppingService.Object)
+                .WithResolvedDependencyFor(this._inventoryService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
+                .WithResolvedDependencyFor(true)
                 .WithAuthenticatedUser(u => u.WithUsername("test@test.com"))
                 .Calling(c => c.GetShoppingHistory(this._request))
                 .ShouldReturn()
@@ -196,10 +196,10 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<ShoppingApiController>()
-                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
-                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                .WithResolvedDependencyFor<bool>(true)
+                .WithResolvedDependencyFor(this._shoppingService.Object)
+                .WithResolvedDependencyFor(this._inventoryService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
+                .WithResolvedDependencyFor(true)
                 .Calling(c => c.GetCartItemsByCartId(this._request, 1))
                 .ShouldReturn()
                 .HttpResponseMessage()
@@ -208,7 +208,7 @@ namespace Demo.Web.Tests
                 .WithResponseModelOfType<IEnumerable<CartItemInfo>>()
                 .Passing(m =>
                 {
-                    Assert.IsTrue(m == items);
+                    Assert.IsTrue(Equals(m, items));
                 });
         }
 
@@ -241,10 +241,10 @@ namespace Demo.Web.Tests
 
             MyWebApi
                 .Controller<ShoppingApiController>()
-                .WithResolvedDependencyFor<IShoppingService>(this._shoppingService.Object)
-                .WithResolvedDependencyFor<IInventoryService>(this._inventoryService.Object)
-                .WithResolvedDependencyFor<ICustomerService>(this._customerService.Object)
-                .WithResolvedDependencyFor<bool>(true)
+                .WithResolvedDependencyFor(this._shoppingService.Object)
+                .WithResolvedDependencyFor(this._inventoryService.Object)
+                .WithResolvedDependencyFor(this._customerService.Object)
+                .WithResolvedDependencyFor(true)
                 .Calling(c => c.CancelCart(this._request, 1))
                 .ShouldReturn()
                 .HttpResponseMessage()
@@ -259,20 +259,6 @@ namespace Demo.Web.Tests
             var request = new HttpRequestMessage();
             request.Properties["MS_HttpConfiguration"] = config;
             return request;
-        }
-
-        T GetResponseData<T>(HttpResponseMessage result)
-        {
-            var content = result.Content as ObjectContent<T>;
-            if (content != null)
-            {
-                T data = (T)(content.Value);
-                return data;
-            }
-            else
-            {
-                return default(T);
-            }
         }
 
         #endregion
