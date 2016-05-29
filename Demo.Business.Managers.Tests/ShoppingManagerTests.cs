@@ -135,7 +135,7 @@ namespace Demo.Business.Managers.Tests
 
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
             repositoryFactory.Setup(obj => obj.GetDataRepository<ICustomerRepository>()).Returns(customerRepository.Object);
-            repositoryFactory.Setup(Obj => Obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
 
             var manager = new ShoppingManager(repositoryFactory.Object);
             var result = manager.GetCartsByDateRange(DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-3), null);
@@ -167,10 +167,8 @@ namespace Demo.Business.Managers.Tests
                 }
             };
 
-            var customerRepository = new Mock<ICustomerRepository>();
-
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            repositoryFactory.Setup(Obj => Obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
 
             var manager = new ShoppingManager(repositoryFactory.Object);
             var result = manager.GetCanceledCarts(DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-2), null);
@@ -202,10 +200,8 @@ namespace Demo.Business.Managers.Tests
                 }
             };
 
-            var customerRepository = new Mock<ICustomerRepository>();
-
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            repositoryFactory.Setup(Obj => Obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
 
             var manager = new ShoppingManager(repositoryFactory.Object);
             var result = manager.GetApprovedCarts(DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-2), null);
@@ -237,10 +233,8 @@ namespace Demo.Business.Managers.Tests
                 }
             };
 
-            var customerRepository = new Mock<ICustomerRepository>();
-
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            repositoryFactory.Setup(Obj => Obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
 
             var manager = new ShoppingManager(repositoryFactory.Object);
             var result = manager.GetShippedCarts(DateTime.Today.AddDays(-5), DateTime.Today.AddDays(-2), null);
@@ -272,10 +266,8 @@ namespace Demo.Business.Managers.Tests
                 }
             };
 
-            var customerRepository = new Mock<ICustomerRepository>();
-
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            repositoryFactory.Setup(Obj => Obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get()).Returns(carts);
 
             var manager = new ShoppingManager(repositoryFactory.Object);
             var result = manager.GetNewCarts();
@@ -320,7 +312,6 @@ namespace Demo.Business.Managers.Tests
         public void test_set_cart_as_canceled()
         {
             var cart = new Cart { CartId = 1 };
-            var cartUpdated = new Cart { CartId = 1, Canceled = DateTime.Today };
 
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
             var customerRepository = new Mock<ICustomerRepository>();
@@ -343,10 +334,8 @@ namespace Demo.Business.Managers.Tests
         public void test_set_cart_as_approved()
         {
             var cart = new Cart { CartId = 1 };
-            var cartUpdated = new Cart { CartId = 1, Approved = DateTime.Today };
 
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            var customerRepository = new Mock<ICustomerRepository>();
 
             repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get(1)).Returns(cart);
 
@@ -365,11 +354,9 @@ namespace Demo.Business.Managers.Tests
         public void test_set_cart_as_shipped()
         {
             var cart = new Cart { CartId = 1 };
-            var cartUpdated = new Cart { CartId = 1, Shipped = DateTime.Today };
-
+ 
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
-            var customerRepository = new Mock<ICustomerRepository>();
-
+      
             repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get(1)).Returns(cart);
 
             var engineFactory = new Mock<IBusinessEngineFactory>();
@@ -438,16 +425,16 @@ namespace Demo.Business.Managers.Tests
             var cartItem2 = new CartItem { CartItemId = 2, CartId = 5 };
             var cart = new Cart { CartId = 3 };
 
-            var cartItem1_2 = new CartItem { CartItemId = 1, CartId = 3 };
-            var cartItem2_2 = new CartItem { CartItemId = 2, CartId = 3 };
+            var cartItem1A = new CartItem { CartItemId = 1, CartId = 3 };
+            var cartItem2B = new CartItem { CartItemId = 2, CartId = 3 };
 
             var repositoryFactory = new Mock<IDataRepositoryFactory>();
             var customerRepository = new Mock<ICustomerRepository>();
 
             repositoryFactory.Setup(obj => obj.GetDataRepository<ICartRepository>().Get(3)).Returns(cart);
             repositoryFactory.Setup(obj => obj.GetDataRepository<ICustomerRepository>()).Returns(customerRepository.Object);
-            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartItemRepository>().Add(cartItem1)).Returns(cartItem1_2);
-            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartItemRepository>().Add(cartItem2)).Returns(cartItem2_2);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartItemRepository>().Add(cartItem1)).Returns(cartItem1A);
+            repositoryFactory.Setup(obj => obj.GetDataRepository<ICartItemRepository>().Add(cartItem2)).Returns(cartItem2B);
 
             var engineFactory = new Mock<IBusinessEngineFactory>();
             var shoppingEngine = new Mock<IShoppingEngine>();
@@ -455,7 +442,7 @@ namespace Demo.Business.Managers.Tests
             engineFactory.Setup(obj => obj.GetBusinessEngine<IShoppingEngine>()).Returns(shoppingEngine.Object);
 
             var manager = new ShoppingManager(repositoryFactory.Object, engineFactory.Object);
-            manager.AddCartItemsToCart(3, new CartItem[] { cartItem1, cartItem2 });
+            manager.AddCartItemsToCart(3, new[] { cartItem1, cartItem2 });
 
             repositoryFactory.VerifyAll();
         }

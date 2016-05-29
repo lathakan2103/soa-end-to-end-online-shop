@@ -20,13 +20,7 @@ namespace Demo.DataAccess.Tests
             ObjectBase.Container = Business.Bootstrapper.MefLoader.Init();
         }
 
-        private bool IntegrationTestedActivated
-        {
-            get
-            {
-                return ConfigurationSettings.AppSettings["doIntegrationTests"] == "true";
-            }
-        }
+        private bool IntegrationTestedActivated => ConfigurationSettings.AppSettings["doIntegrationTests"] == "true";
 
         #region Integration tests
 
